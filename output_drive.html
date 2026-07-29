@@ -1,0 +1,3552 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mappe di Genere - Atlante di genere Bologna 2026</title>
+  <meta name="description" content="Atlante di genere del Comune di Bologna 2024: mappe interattive e dati statistici sulla popolazione femminile e sul divario di genere nel territorio urbano bolognese.">
+  <style>
+    :root {
+      --font-body: Georgia, 'Times New Roman', serif;
+      --font-head: 'Segoe UI', Helvetica, sans-serif;
+      --color-text: #1a1a2e;
+      --color-accent: #2c5f8a;
+      --color-muted: #6b7280;
+      --color-border: #d1d5db;
+      --color-bg: #e8e6e1;
+      --page-height: 550px;
+      --page-width: 1480px;      
+      --page-padding: 2.2rem;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+  font-family: var(--font-body);
+  background: var(--color-bg);
+  color: var(--color-text);
+  line-height: 1.75;
+  padding: 2rem 1.5rem;
+  counter-reset: pagina 0 c1 0 c2 0 c3 0; /* <--- 'pagina' aggiunto insieme a c1, c2 e c3 */
+}
+
+    /* ══════════════════════════════════════════
+       PAGINA — altezza fissa px, multi-column
+       Il contenuto scorre automaticamente nella
+       colonna successiva quando quella è piena.
+    ══════════════════════════════════════════ */
+    .nuova-pagina {
+      height: var(--page-height);
+      width: var(--page-width);
+      columns: 4;
+      column-gap: 2rem;
+      column-rule: 1px solid var(--color-border);
+      column-fill: auto;
+      overflow: hidden;
+      background: #fff;
+      border: 1px solid var(--color-border);
+      border-radius: 4px;
+      box-shadow: 0 2px 12px rgba(0,0,0,.08);
+      margin-bottom: 2.5rem;
+      padding: var(--page-padding);
+    }
+
+    /* ── Varianti numero colonne ── */
+    .nuova-pagina.p-1col { columns: 1; }
+    .nuova-pagina.p-2col { columns: 2; }
+    .nuova-pagina.p-3col { columns: 3; }
+    .nuova-pagina.p-4col { columns: 4; }
+
+    /* ── Elementi che non devono spezzarsi tra colonne ── */
+    .blocco {
+      break-inside: avoid;
+      margin-bottom: 1rem;
+      position: relative; /* Necessario per il corretto posizionamento assoluto del bottone */
+    }
+
+    /* ── Elemento che deve iniziare su una nuova colonna ── */
+    .nuova-colonna {
+      break-before: column;
+    }
+
+    /* ── Immagine a larghezza piena di colonna ── */
+    .img-col {
+      break-inside: avoid;
+      width: 100%;
+      margin-bottom: 1rem;
+    }
+    .img-col img {
+      width: 100%;
+      display: block;
+      object-fit: cover;
+    }
+
+    /* ── Immagine che occupa tutta la pagina (1 colonna) ── */
+    .img-pagina {
+      column-span: all;
+      width: calc(100% + var(--page-padding) * 2);
+      margin: calc(-1 * var(--page-padding));
+      height: var(--page-height);
+      overflow: hidden;
+    }
+    .img-pagina img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    /* ── Titoli ── */
+    .titolo-sezione {
+      font-family: var(--font-head);
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--color-accent);
+      border-bottom: 2px solid var(--color-accent);
+      padding-bottom: .35rem;
+      margin-bottom: .7rem;
+      margin-top: 1.2rem;
+      break-after: avoid;
+    }
+    .titolo-sezione:first-child { margin-top: 0; }
+
+    .titolo-sottosezione {
+      font-family: var(--font-head);
+      font-size: .9rem;
+      font-weight: 600;
+      color: var(--color-accent);
+      margin-bottom: .3rem;
+      margin-top: .9rem;
+      break-after: avoid;
+    }
+
+    .titolo-paragrafo {
+      font-family: var(--font-head);
+      font-size: .85rem;
+      font-weight: 600;
+      color: var(--color-accent);
+      margin-bottom: .2rem;
+      margin-top: .7rem;
+      break-after: avoid;
+    }
+
+    /* ── Numerazione via data-n ── */
+    .num-cap::before  { content: attr(data-n) "  "; color: var(--color-accent); font-weight: 700; }
+    .num-sub::before  { content: attr(data-n) "  "; color: var(--color-accent); font-weight: 600; }
+    .num-par::before  { content: attr(data-n) "  "; color: var(--color-muted);  font-weight: 600; }
+
+    /* ── Testo ── */
+    p.testo {
+      font-size: .75rem;
+      color: #374151;
+      margin-top: .45rem;
+      margin-right: .45rem;
+      line-height: 1.05;
+      break-inside: avoid;
+      text-align: justify
+    }
+
+/* ── Testo1 ── */
+    p.testo1 {
+      font-size: .55rem;
+      color: #374151;
+      margin-top: .45rem;
+      margin-right: .45rem;
+      line-height: 1.05;
+      break-inside: avoid;
+      text-align: justify
+    }
+
+    .avviso { font-size: .8rem; color: var(--color-muted); font-family: var(--font-head); }
+    .avviso p { margin-bottom: .4rem; }
+    .avviso strong { color: var(--color-text); }
+    a { color: var(--color-accent); }
+
+    .sep {
+      border: none;
+      border-top: 1px solid var(--color-border);
+      margin: 1rem 0;
+      break-after: avoid;
+    }
+
+    ul.lista {
+      font-size: .85rem;
+      color: #374151;
+      padding-left: 1.1rem;
+      margin-top: .4rem;
+      line-height: 1.75;
+    }
+
+    /* ── STAMPA ── */
+    @media print {
+      body { background: none; padding: 0; }
+      .nuova-pagina {
+        page-break-before: always;
+        break-before: page;
+        box-shadow: none;
+        border: none;
+        margin: 0;
+        height: 100vh;
+      }
+      .nuova-pagina:first-of-type { page-break-before: avoid; break-before: avoid; }
+      .btn-mappa-personalizzata { display: none !important; } /* Nasconde il tasto in stampa */
+    }
+
+/* ────────────────────────────────────────────
+       CONTATORI AUTOMATICI INTER-PAGINA
+    ──────────────────────────────────────────── */
+
+/* 1. Inizializzazione globale sul body: i contatori nascono qui e non muoiono mai */
+body {
+  font-family: var(--font-body);
+  background: var(--color-bg);
+  color: var(--color-text);
+  line-height: 1.75;
+  padding: 2rem 1.5rem;
+  counter-reset: c1 0 c2 0 c3 0; /* <--- Inizializza tutto a 0 all'inizio del documento */
+}
+
+/* Rimuoviamo i vecchi reset standard che spezzavano il flusso */
+ol.livello-1, ol.livello-2, ol.livello-3 {
+  list-style: none;
+  padding: 0;
+}
+
+/* Livello 1 (Capitoli: 1, 2, 3...)
+  Quando si attiva, aumenta C1 e AZZERA C2 e C3 a livello globale
+*/
+ol.livello-1 > li {
+  counter-increment: c1;
+  counter-set: c2 0 c3 0; 
+  margin-top: 2.4rem;
+margin-left: 1.0rem;
+margin-right: 1.0rem;
+}
+
+ol.livello-1 > li > .titolo-sezione::before {
+  content: counter(c1) "  ";
+  font-family: var(--font-head);
+  font-weight: 700;
+  font-size: 2.25rem;
+  color: var(--color-accent);
+  min-width: 2.4rem;
+  display: inline-block;
+
+}
+
+/* Livello 2 (Sottosezioni: 1.1, 1.2...)
+  Quando si attiva, aumenta C2 e AZZERA C3 a livello globale. Ricorda il valore di C1!
+*/
+ol.livello-2 > li {
+  counter-increment: c2;
+  counter-set: c3 0;
+  margin-top: 1.4rem;
+  margin-left: 1.0rem;
+margin-right: 1.0rem;
+}
+
+ol.livello-2 > li > .titolo-sottosezione::before {
+  content: counter(c1) "." counter(c2) "  ";
+  font-family: var(--font-head);
+  font-weight: 600;
+  font-size: 2.0rem;
+  color: var(--color-accent);
+  min-width: 2.8rem;
+  display: inline-block;
+}
+
+/* Livello 3 (Paragrafi: 1.1.1, 1.1.2...)
+  Aumenta solo C3. Ricorda i valori correnti di C1 e C2!
+*/
+ol.livello-3 > li {
+  counter-increment: c3;
+  margin-top: 0.9rem;
+  margin-left: 1.6rem;
+}
+
+ol.livello-3 > li > .titolo-paragrafo::before {
+  content: counter(c1) "." counter(c2) "." counter(c3) "  ";
+  font-family: var(--font-head);
+  font-weight: 600;
+  font-size: 1.6rem;
+  color: var(--color-accent);
+  min-width: 3.2rem;
+  display: inline-block;
+}
+
+.pagina-2-grid {
+  display: grid;
+  grid-template-columns: 25% 75%; /* larghezze delle colonne */
+  gap: 2rem;
+
+  height: var(--page-height);
+  width: var(--page-width);
+
+  overflow: hidden;
+  background: #FFFFFF;
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  box-shadow: 0 2px 12px rgba(0,0,0,.08);
+  margin-bottom: 2.5rem;
+  padding: var(--page-padding);
+}
+
+
+.pagina-2meta-grid {
+  display: grid;
+  grid-template-columns: 50% 50%; /* larghezze delle colonne */
+  gap: 2rem;
+
+  height: var(--page-height);
+  width: var(--page-width);
+
+  overflow: hidden;
+  background: #FFFFFF;
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  box-shadow: 0 2px 12px rgba(0,0,0,.08);
+  margin-bottom: 2.5rem;
+  padding: var(--page-padding);
+padding-top: 0rem;
+padding-bottom: 0rem;
+}
+
+.pagina-3-grid {
+  display: grid;
+  grid-template-columns: 25% 25% 50%;
+  gap: 2rem;
+
+  height: var(--page-height);
+  width: var(--page-width);
+
+  overflow: hidden;
+  background: #FFFFFF;
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  box-shadow: 0 2px 12px rgba(0,0,0,.08);
+  margin-bottom: 2.5rem;
+  padding: var(--page-padding);
+padding-top: 0rem;
+padding-bottom: 0rem;
+}
+
+.pagina-1-grid {
+  display: grid;
+  grid-template-columns: 100%;
+  gap: 2rem;
+
+  height: var(--page-height);
+  width: var(--page-width);
+
+  overflow: hidden;
+  background: #FFFFFF;
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  box-shadow: 0 2px 12px rgba(0,0,0,.08);
+  margin-bottom: 2.5rem;
+  padding: var(--page-padding);
+}
+
+.pagina-4-grid {
+  display: grid;
+  grid-template-columns: 25% 25% 25% 25%;
+  gap: 2rem;
+
+  height: var(--page-height);
+  width: var(--page-width);
+
+  overflow: hidden;
+  background: #FFFFFF;
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  box-shadow: 0 2px 12px rgba(0,0,0,.08);
+  margin-bottom: 2.5rem;
+  padding: var(--page-padding);
+}
+
+
+
+
+/* ══════════════════════════════════════════ 
+   GESTIONE NUMERAZIONE PAGINE
+   ══════════════════════════════════════════ */
+
+/* Ogni pagina incrementa il contatore */
+.nuova-pagina {
+  position: relative;
+  counter-increment: pagina;
+}
+
+/* Numero pagina in basso a sinistra */
+.nuova-pagina::after {
+  content: "Pagina " counter(pagina);
+  position: absolute;
+  bottom: 0.6rem;
+  left: 1rem;
+  font-size: 0.7rem;
+  color: #6b7280;
+  font-family: var(--font-head);
+  z-index: 10; /* Assicura che il numero sia visibile sopra eventuali griglie */
+}
+
+/* Nasconde il numero nella prima pagina (Copertina) */
+.nuova-pagina:first-of-type::after {
+  content: none; /* 'none' è più pulito rispetto a stringa vuota per i pseudo-elementi */
+}
+
+
+
+
+
+
+
+/* ── FORMATTAZIONE INDICE CON ALLINEAMENTO CORRETTO ── */
+.idx-item {
+  display: flex;
+  align-items: flex-end; /* Allinea puntini e pagina all'ultima riga del titolo */
+  margin-bottom: 0.35rem; 
+  break-inside: avoid;
+  font-family: var(--font-body);
+  width: 100%;
+}
+
+.idx-item a {
+  text-decoration: none;
+  color: #374151;
+  display: inline;      /* Permette al testo lungo di andare a capo */
+  flex-shrink: 1;       /* Consente al link di lasciare spazio ai puntini */
+  line-height: 1.2;
+}
+
+.idx-item a:hover {
+  color: var(--color-accent);
+}
+
+/* I puntini ora si applicano all'elemento idx-item e riempiono SOLO lo spazio in mezzo */
+.idx-item::after {
+  content: "";
+  flex-grow: 1;         /* Spinge la pagina tutta a destra */
+  border-bottom: 1px dotted var(--color-muted); /* Disegna i puntini */
+  margin: 0 0.5rem;
+  position: relative;
+  top: -0.25rem;        /* Centra verticalmente i puntini rispetto al testo */
+  min-width: 20px;      /* Garantisce uno spazio minimo di puntini */
+}
+
+/* Il numero di pagina viene bloccato a destra fuori dal link */
+.idx-page {
+  font-family: var(--font-head);
+  color: var(--color-accent);
+  font-weight: 600;
+  white-space: nowrap;  /* Impedisce al numero di andare a capo */
+  flex-shrink: 0;       /* Impedisce al numero di essere schiacciato */
+  order: 3;             /* Forza la pagina ad apparire dopo i puntini */
+}
+
+/* Margini e formattazione dei vari livelli nell'indice */
+.idx-l1 { font-weight: bold; margin-top: 0.5rem; font-size: 0.65rem; }
+.idx-l2 { padding-left: 0.6rem; }
+.idx-l3 { padding-left: 1.2rem; color: #4b5563; }
+
+
+
+
+
+
+
+
+
+
+
+/* ── MINI INDICE PER I CAPITOLI DI LIVELLO 1 ── */
+.mini-indice-capitolo {
+  margin-top: 1.5rem;
+  padding-top: 0.8rem;
+  border-top: 1px dashed var(--color-border);
+  break-inside: avoid;
+}
+.mini-indice-capitolo .mini-idx-titolo {
+  font-family: var(--font-head);
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--color-accent);
+  text-transform: uppercase;
+  margin-bottom: 0.4rem;
+}
+.mini-indice-capitolo ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.mini-indice-capitolo li {
+  font-family: var(--font-body);
+  font-size: 0.7rem;
+  color: #4b5563;
+  margin-bottom: 0.3rem;
+  line-height: 1.3;
+}
+.mini-indice-capitolo a {
+  text-decoration: none;
+  color: inherit;
+  display: block; /* Aumenta l'area cliccabile */
+}
+.mini-indice-capitolo a:hover {
+  color: var(--color-accent);
+}
+
+/* ── SKIP LINK (accessibilità tastiera) ── */
+.skip-link {
+  position: absolute;
+  top: -100px;
+  left: 0;
+  background: #000;
+  color: #fff;
+  padding: 8px 16px;
+  font-family: var(--font-head);
+  font-size: 0.9rem;
+  font-weight: 700;
+  text-decoration: none;
+  z-index: 10000;
+  border-radius: 0 0 4px 0;
+  transition: top 0.1s;
+}
+.skip-link:focus {
+  top: 0;
+}
+
+/* ── FOCUS VISIBILE ── */
+:focus-visible {
+  outline: 3px solid #f59e0b;
+  outline-offset: 2px;
+}
+a:focus-visible,
+button:focus-visible {
+  outline: 3px solid #f59e0b;
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* ── IFRAME: occupa tutto il blocco contenitore (formato PDF) ── */
+/* Il blocco che contiene un iframe diventa un contenitore a posizionamento relativo
+   che si estende a tutta l'altezza disponibile nella griglia */
+.blocco:has(> iframe) {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-self: stretch; /* si allunga fino a riempire la cella di griglia */
+  min-height: 0;       /* necessario perché flex child non esca dalla griglia */
+}
+
+.blocco:has(> iframe) > iframe {
+  display: block;
+  flex: 1 1 auto;      /* cresce per riempire tutto lo spazio flex disponibile */
+  min-height: 0;
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+}
+
+/* ── STILE BOTTONE SOVRAPPOSTO ALL'IFRAME ── */
+.btn-mappa-personalizzata {
+  position: absolute;
+  top: 500px;
+  right: 25px;
+  z-index: 999;
+  background-color: var(--color-accent);
+  color: #ffffff;
+  padding: 8px 14px;
+  font-family: var(--font-head);
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  text-decoration: none;
+  border-radius: 4px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.25);
+  transition: background-color 0.2s ease, transform 0.1s ease;
+}
+.btn-mappa-personalizzata:hover {
+  background-color: #1d4566;
+  color: #ffffff;
+  transform: translateY(-1px);
+}
+.btn-mappa-personalizzata:active {
+  transform: translateY(1px);
+}
+
+/* ══════════════════════════════════════════
+   TOGGLE MODALITÀ WEB/COMUNICATO
+   ══════════════════════════════════════════ */
+
+#toggle-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 9999;
+  background: var(--color-accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  padding: 0.5rem 1rem;
+  font-family: var(--font-head);
+  font-size: 0.75rem;
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+
+#toggle-bar span { opacity: 0.8; }
+
+.toggle-switch {
+  display: flex;
+  border: 1.5px solid rgba(255,255,255,0.5);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.toggle-switch button {
+  background: transparent;
+  border: none;
+  color: #ffffff;
+  padding: 3px 14px;
+  font-family: var(--font-head);
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+
+.toggle-switch button.active {
+  background: rgba(255,255,255,0.2);
+  color: #fff;
+}
+
+body { padding-top: 2.8rem; } /* spazio per la barra fissa */
+
+/* ══════════════════════════════════════════
+   MODALITÀ WEB — sovrascrive tutto ciò che
+   è pensato per la stampa/pagina fissa.
+   Attivata dalla classe .web-mode sul body.
+   ══════════════════════════════════════════ */
+
+body.web-mode {
+  max-width: 860px;
+  margin: 0 auto;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+}
+
+/* Tutte le pagine diventano blocchi a larghezza normale, altezza auto */
+body.web-mode .nuova-pagina,
+body.web-mode .pagina-2-grid,
+body.web-mode .pagina-3-grid,
+body.web-mode .pagina-2meta-grid,
+body.web-mode .pagina-4-grid,
+body.web-mode .pagina-1-grid {
+  width: 100% !important;
+  height: auto !important;
+  max-width: 100%;
+  columns: 1 !important;
+  display: block !important;
+  overflow: visible !important;
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  box-shadow: 0 1px 6px rgba(0,0,0,0.08);
+}
+
+/* Numeri di pagina: nascondili in modalità web */
+body.web-mode .nuova-pagina::after { display: none; }
+
+/* Immagini decorative laterali/intestazioni/copertina: nascoste in web */
+body.web-mode .img-sinistra-nascosta,
+body.web-mode .img-pagina,
+body.web-mode img[src="img_sinistra.png"],
+body.web-mode img[src="corpo.png"],
+body.web-mode img[src="copertina2026.png"],
+body.web-mode img[src="bologna.png"],
+body.web-mode img[src="strisce_pedonali.png"],
+body.web-mode img[src="firma_assessore.png"] {
+  display: none !important;
+}
+
+/* Immagini che invece vogliamo mostrare (icone, QR informativi, ecc.) */
+body.web-mode img[src="icone_corpo_ruolo.png"],
+body.web-mode img[src="QR01.png"],
+body.web-mode img[src="03_bologna_tramonto.png"] {
+  display: inline-block;
+  max-width: 200px;
+  height: auto;
+}
+
+/* Tutti i blocchi .blocco: dimensionamento fluido */
+body.web-mode .blocco {
+  width: 100%;
+  margin-bottom: 1.2rem;
+}
+
+/* Iframe: larghezza piena e altezza generosa */
+body.web-mode iframe {
+  width: 100% !important;
+  height: 480px !important;
+  margin: 1rem 0;
+  border-radius: 4px;
+  border: 1px solid var(--color-border);
+  display: block;
+}
+
+/* Testo più leggibile a schermo */
+body.web-mode p.testo {
+  font-size: 0.9rem !important;
+  line-height: 1.7 !important;
+  margin-top: 0.7rem;
+}
+body.web-mode p.testo1 {
+  font-size: 0.8rem !important;
+  line-height: 1.6 !important;
+}
+body.web-mode .titolo-sezione  { font-size: 1.1rem; }
+body.web-mode .titolo-sottosezione { font-size: 1rem; }
+body.web-mode .titolo-paragrafo { font-size: 0.95rem; }
+
+/* Rientri lista */
+body.web-mode ol.livello-2 > li { margin-left: 0.8rem; }
+body.web-mode ol.livello-3 > li { margin-left: 1.2rem; }
+
+/* Indice: mostralo correttamente a una colonna */
+body.web-mode #indice-automatico {
+  columns: 1 !important;
+  font-size: 0.85rem !important;
+}
+
+/* Tabelle con QR: nascondi il QR, mostra solo il testo descrittivo */
+body.web-mode table td:first-child { display: none; }
+body.web-mode table td:last-child { padding-left: 0; }
+
+/* ══════════════════════════════════════════
+   ACCESSIBILITÀ — MODALITÀ WEB (WCAG 2.1 AA)
+   ══════════════════════════════════════════ */
+
+/* Testo principale: dimensione minima 16px */
+body.web-mode p.testo {
+  font-size: 1rem !important;
+  line-height: 1.75 !important;
+  color: #1f2937 !important; /* contrasto 10.7:1 su bianco */
+}
+body.web-mode p.testo1 {
+  font-size: 0.875rem !important;  /* 14px, da 0.55rem (8.8px) */
+  line-height: 1.6 !important;
+  color: #1f2937 !important;
+}
+
+/* Titoli: leggibili e distinti */
+body.web-mode .titolo-sezione {
+  font-size: 1.25rem !important;
+  color: #1d4566 !important; /* contrasto > 7:1 */
+}
+body.web-mode .titolo-sottosezione {
+  font-size: 1.1rem !important;
+  color: #1d4566 !important;
+}
+body.web-mode .titolo-paragrafo {
+  font-size: 1rem !important;
+  color: #1d4566 !important;
+}
+
+/* Indice: testo leggibile */
+body.web-mode #indice-automatico {
+  font-size: 0.9rem !important;
+}
+body.web-mode .idx-l1 { font-size: 0.9rem; }
+body.web-mode .idx-l3 { color: #374151; }
+body.web-mode .idx-item a { color: #1d4566; }
+
+/* Mini indice capitolo */
+body.web-mode .mini-indice-capitolo .mini-idx-titolo { font-size: 0.85rem; }
+body.web-mode .mini-indice-capitolo li { font-size: 0.85rem; }
+
+/* Link: colore con contrasto sufficiente + underline */
+body.web-mode a {
+  color: #1d4566;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+body.web-mode a:hover {
+  color: #0f2a3d;
+  text-decoration-thickness: 2px;
+}
+
+/* Bottone mappa: sfondo blu scuro, testo bianco — non eredita gli stili link */
+body.web-mode .btn-mappa-personalizzata,
+.btn-mappa-personalizzata {
+  color: #ffffff !important;
+  text-decoration: none !important;
+  background-color: var(--color-accent) !important;
+}
+body.web-mode .btn-mappa-personalizzata:hover {
+  background-color: #1d4566 !important;
+  color: #ffffff !important;
+}
+
+/* Testi muted: garantire contrasto minimo 4.5:1 */
+body.web-mode .avviso {
+  color: #374151 !important;
+  font-size: 0.9rem;
+}
+
+/* Numeratori automatici: testo più grande */
+body.web-mode ol.livello-1 > li > .titolo-sezione::before { font-size: 1.8rem; }
+body.web-mode ol.livello-2 > li > .titolo-sottosezione::before { font-size: 1.5rem; }
+body.web-mode ol.livello-3 > li > .titolo-paragrafo::before { font-size: 1.2rem; }
+
+/* Riduzione animazioni per utenti con preferenza */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+    animation: none !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Toggle bar: stato aria-pressed visivo */
+.toggle-switch button[aria-pressed="true"] {
+  background: rgba(255,255,255,0.2);
+  color: #fff;
+}
+.toggle-switch button[aria-pressed="false"] {
+  color: #ffffff;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+</style>
+
+<style>
+.video-container,
+figure {
+    width: 100%;
+    max-width: 100%;
+}
+
+.video-container iframe,
+figure iframe,
+iframe {
+    width: 100% !important;
+    min-height: 500px;
+    border: 0;
+    display: block;
+}
+
+@media print {
+    .video-container iframe,
+    figure iframe,
+    iframe {
+        width: 100% !important;
+        height: 600px !important;
+        min-height: 600px !important;
+    }
+
+    .video-container,
+    figure {
+        page-break-inside: avoid;
+    }
+}
+</style>
+
+</head>
+
+
+
+<body>
+
+<!-- ── LINK SALTA AL CONTENUTO (accessibilità tastiera) ── -->
+<a href="#contenuto-principale" class="skip-link">Vai al contenuto principale</a>
+
+<!-- ── BARRA TOGGLE MODALITÀ ── -->
+<nav id="toggle-bar" aria-label="Selezione modalità di visualizzazione">
+  <span id="toggle-label">Visualizzazione:</span>
+  <div class="toggle-switch" role="group" aria-labelledby="toggle-label">
+    <button id="btn-comunicato" class="active" onclick="setMode('comunicato')" aria-pressed="true" aria-label="Formato PDF per la stampa">📄 Formato pdf</button>
+    <button id="btn-web" onclick="setMode('web')" aria-pressed="false" aria-label="Lettura web ottimizzata per schermo">🌐 Lettura web</button>
+  </div>
+</nav>
+
+<main id="contenuto-principale">
+<div class="nuova-pagina pagina-1-grid">
+
+
+  <div class="img-pagina">
+    <img src="copertina2026.png" alt="Copertina mappe di genere">
+  </div>
+
+
+</div>
+
+<div class="nuova-pagina pagina-1-grid">
+
+  <div class="blocco"><br><br><br><br>
+<p class="testo">
+    AVVISO LEGALE</p>
+    <p class="testo">Mappe di Genere: Strumenti per informare e orientare le politiche della città 2024</p>
+    <p class="testo">Progetto "GENDER GAP REDUCTION IN URBAN PROJECTS IN BOLOGNA (ITALY)"</p>
+    <p class="testo">Per i dettagli della realizzazione della prima edizione del documento e per 
+gli aspetti legali e gli approfondimenti vai al link</p>
+    <p class="testo">  <a href="https://www.comune.bologna.it/governo/programmazione-strategica/agenda-2030">
+https://www.comune.bologna.it/governo/programmazione-strategica/agenda-2030</a>
+    </p>
+  
+    <p class="testo">Autori edizione 2024</p>
+    <p class="testo">Area Programmazione, Statistica e Presidio Sistemi di Controllo interni, Comune di Bologna</p>
+    <p class="testo">Capo Area: Mariagrazia Bonzagni</p>
+    <p class="testo">Dirigente dell'U.I. Ufficio Comunale di Statistica: Silvia Marreddu</p>
+     <p class="testo"> Redazione: Paola Ventura, Fabrizio Dell'Atti</p>
+  
+   <p class="testo"> Aggiornamento grafico: Cristina Cacco</p>
+  
+    <p class="testo">Si ringrazia per la collaborazione</p>
+    <p class="testo">Pablo Martínez — Esperto internazionale di Business Intelligence, Assistenza tecnica</p>
+
+</div>
+</div>
+
+<div class="nuova-pagina p-4col"> 
+  <div class="blocco">
+    <h1 class="titolo-sezione">Presentazione</h1>
+    <p class="testo">Questo importante progetto nasce dalla collaborazione tra il Comune
+di Bologna e la BEI (Banca Europea per gli investimenti)
+nell’ambito di un progetto più ampio che ha l’obiettivo di supportare
+il Comune nella progettazione e realizzazione di infrastrutture
+urbane e, in generale, di edifici e spazi pubblici accessibili alle
+donne e agli uomini e a tutte le persone che abitano la città ed è
+l’esito di un complesso percorso formativo e trasversale all’interno
+dell’Amministrazione.</p>
+  </div>
+  <p class="testo">Il progetto ha contribuito, da un lato, a sensibilizzare ed accrescere
+la cultura interna su temi che difficilmente entrano nell’agenda
+formativa del personale e, dall’altro, attraverso la costituzione di un
+gruppo di lavoro trasversale, ha messo al centro la questione dei
+dati e la necessità di disporre di informazioni e conoscenza per poter
+decidere e progettare.</p>
+  <p class="testo">Dalla puntuale attività di analisi per rilevare, nell’ambito delle varie
+strutture organizzative dell’amministrazione, le criticità relative
+ai dati, alla loro disponibilità, modalità di raccolta e capacità di
+integrazione è sorta l’esigenza e l’opportunità di costruire un vero
+e proprio Atlante, per dare evidenza visiva e, quindi, supportare la
+programmazione e la progettazione di infrastrutture e servizi accessibili
+a tutte e a tutti laddove richiesti e necessari.</p>
+  <p class="testo">L’obiettivo generale del progetto è funzionale a supportare l’Ente
+nell’attuazione di progetti che possam ridurre il divario di genere
+esistente e contribuire al gender empowerment creando infrastrutture
+e servizi accessibili a tutte e tutti.</p>
+  <p class="testo">La mappatura si colloca all’interno di un processo di pianificazione
+dinamica e fedele alle peculiarità del territorio e della collettività di
+cui è espressione.</p>
+  <p class="testo">Tuttavia quello che le mappe istituzionali non sempre riescono a
+restituirci sono i fili visibili e invisibili o le relazioni fra persone ed
+enti; è questo lo scopo del progetto, finanziato dalla Regione Emilia
+Romagna, dal titolo “Verso un Atlante di genere a Bologna”. Prospettive
+femministe per costruire città sicure”; quest’ultimo, in fase
+di avvio, integrerà questo Documento e rappresenterà la sua prima
+evoluzione. Sarà teso a rilevare mappature di comunità, aspetti
+materiali ed immateriali che alimentano i nostri territori e interazioni
+attraverso il coinvolgimento di terzo settore, delle scuole e della
+comunità cittadina. mappe create dal basso, che potranno fornire
+opportunità di incontro durante la loro stessa elaborazione.</p>
+  <p class="testo">L’idea di costruire insieme, come collettività, una rappresentazione
+cartografica dei luoghi che condividiamo e che contribuiamo a plasmare
+con le nostre azioni, interazioni e progetti, è al tempo stesso
+innovativa e antica e non priva di fascino.</p>
+  <p class="testo">Il percorso partecipativo in essere, per realizzare il progetto finanziato
+dalla Regione, farà emergere esigenze, aspettative e potenzialità
+che riguardano luoghi e persone; l’obiettivo finale è quello di avere
+uno strumento per la realizzazione di nuove progettazioni, che
+assuma un potenziale educativo, di empowerment e di inclusione
+sociale che si presenta assolutamente in linea con quanto previsto
+dalla Strategia Nazionale di Sviluppo Sostenibile, potendosi considerare
+a tutti gli effetti un documento di natura programmatica
+e programmatoria. In esso trova applicazione l’SDG 5 che intende
+garantire al genere femminile la parità nell’accesso all’educazione
+e alle cure mediche, in ambito lavorativo e all’interno degli organi
+decisionali politici ed economici.</p>
+  <p class="testo">A tali considerazioni occorre aggiungere che la debolezza dei sistemi
+di monitoraggio e valutazione che, purtroppo, troppo spesso,
+contraddistingue le politiche di welfare del nostro ordinamento
+giuridico, trova, nello strumento Atlante di genere, un valido supporto.
+Su questo ci rafforza anche il gruppo Grevio (gruppo di esperti indipendenti,
+con sede presso il Consiglio d’Europa, sulla lotta contro
+la violenza nei confronti delle donne e la violenza domestica attraverso
+il monitoraggio delle disposizioni contenute nella Convenzione
+di Istanbul) che, nell’ultimo Rapporto di valutazione (anno 2020), ha
+esortato vivamente le autorità italiane a favorire l’accesso delle vittime
+a servizi di assistenza generali adeguati, come i servizi sanitari,
+di alloggio, all’occupazione, di pubblica istruzione e formazione e a
+garantire che tali servizi siano uniformemente distribuiti in tutto il Paese
+e dispongano delle risorse necessarie e di personale formato sulle
+dinamiche di genere della violenza contro le donne.</p>
+  <p class="testo">Pertanto se “il viaggio é importante quanto la destinazione”, l’Atlante
+sarà funzionale non solo a fare emergere la rappresentazione di luoghi
+e spazi, ma anche a permettere alle comunità locali e, in particular,
+alle sue componenti più vulnerabili di poter ambire a contesti educativamente
+attrezzati, socialmente ricchi e urbanisticamente vivibili.</p>
+  
+<img src="firma_assessore.png" alt="Firma assessore">
+<p class="testo">La Vicesindaca Emily Marion Clancy</p>
+  
+<img src="03_bologna_tramonto.png" alt="Tramonto Bologna">  
+</div>
+</div>
+
+<div class="nuova-pagina p-4col">
+
+  
+
+  <div style="display: flex; flex-direction: column; height: 100%;">
+    <div style="font-family: var(--font-head); font-size: 1rem; font-weight: bold; color: var(--color-accent); margin-bottom: 0.5rem; border-bottom: 1px solid var(--color-accent);">
+      INDICE DEI CONTENUTI
+    </div>
+    
+    <div id="indice-automatico" style="column-gap: 1.5rem; font-size: 0.55rem; line-height: 1.4; flex-grow: 1;">
+      </div>
+  </div>
+
+</div>
+
+<div class="nuova-pagina pagina-2-grid">
+	<div class="blocco">
+		
+				<h1 class="titolo-sezione">
+                    <span style="font-size:40px;">0 </span>Introduzione
+				</h1>
+
+
+	</div>
+
+		<div class="blocco">
+			<div class="img-pagina">
+            		<img src="bologna.png" alt="vista su Bologna">
+        		</div>
+		</div>
+
+</div>
+
+<div class="nuova-pagina p-4col">
+<div class="blocco">
+
+<h2 class="titolo-sezione">Introduzione</h2>
+
+<p class="testo">Questo lavoro è il frutto della collaborazione tra il Comune di Bologna
+e la BEI (Banca Europea per gli Investimenti) a conclusione di
+un intenso processo realizzato tra il 2022 e il 2023 nell’ambito del
+progetto “Gender gap reduction in urban projects in Bologna”
+finanziato dalla BEI e implementato dal Consorzio formato da OCA
+Global, Istituto per la Ricerca Sociale, e Fondazione Giacomo Brodolini,
+con l’obiettivo di definire linee guida che favoriscano un più
+efficace processo decisionale nelle amministrazioni, finalizzato ad
+una società più egualitaria ed inclusiva, al fine di guidarla verso un
+maggior sviluppo sostenibile.</p>
+<p class="testo">Il documento principale sono “Linee guida per progetti inclusivi
+dal punto di vista di genere”, un manuale che fornisce informazioni
+dettagliate sul modo in cui gli interventi urbani possono
+influire sugli effetti di uguaglianza attraverso una corretta pianificazione,
+contribuendo in modo accurato a prendere decisioni concrete
+riguardo agli interventi nell’ambiente urbano.</p>
+<p class="testo">Al tempo stesso, l’assistenza fornita al Comune durante questo periodo,
+ha permesso di rendere disponibile una notevole quantità di
+informazioni in grado di descrivere il territorio urbano adottando
+una prospettiva di genere. Nell’arco di un anno, tale processo, con
+il supporto tecnico della BEI, ha portato all’identificazione e all’analisi
+di nuove fonti di dati che hanno arricchito il patrimonio di
+informazioni del Comune.</p>
+<p class="testo">Il seguente documento, che integra questi dati, è quindi nato in
+modo naturale e mira a riunire queste informazioni con l’obiettivo
+di renderle disponibili ai cittadini e alle cittadine, costruire una
+narrazione con uno sguardo di genere al contesto urbano e di migliorare
+i processi di pianificazione.
+I dati e le cartografie di questo Atlante vogliono essere un supporto per le 
+decisioni di progettazione e costruzione di nuove infrastrutture
+e servizi, consentendoci di guardare Bologna nella totalità
+e complessità del suo territorio, suggerendo dove è necessario intervenire,
+perché si manifestano criticità e dove è necessario dare
+priorità agli interventi urbani.</p>
+<p class="testo">Questo lavoro è un vero e proprio Atlante, uno strumento cartografico
+che si limita ad una rappresentazione e non ha l’obiettivo
+di offrire soluzioni alle criticità rappresentate.</p>
+
+<h2 class="titolo-sezione">Un Atlante in continua evoluzione</h2>
+
+<p class="testo">Il processo di elaborazione di questo Atlante è dinamico e articolato,
+è un percorso in continua evoluzione perché il Comune genera
+costantemente nuove informazioni e, al contempo, emergono
+nuovi problemi da affrontare che stimolano a cercare ancora più
+dati che li descrivano.</p>
+<p class="testo">Un Atlante aspira a riunire tutte le conoscenze di un territorio. Il
+presente documento parte dal presupposto che la complessità del
+tema è costantemente in divenire e, pertanto, questa è la prima
+versione di un documento cui seguiranno versioni successive con
+nuovi dati e prospettive sulle informazioni in grado di descrivere il
+divario di genere nella città per raggiungere l’obiettivo di agire per
+contrastarlo e ridurlo, fino alla parità.</p>
+
+<h2 class="titolo-sezione">Un libro fatto di dati</h2>
+
+<p class="testo">In un contesto in cui le informazioni circolano attraverso supporti
+digitali e i dati sono elaborati attraverso avanzate tecnologie informatiche,
+il Comune di Bologna e la BEI hanno deciso di produrre
+questo Atlante anche nel formato classico di libro, pur fatto di dati,
+un unico volume che racchiude il lavoro svolto, da stampare, sfogliare
+e tenere sulla scrivania. Tale scelta è stata fondamentale per
+definire gli obiettivi del processo e per delimitare con precisione
+dove concentrare gli sforzi in questa prima edizione del documento.</p>
+<p class="testo">Il libro limita la quantità di informazioni da inserire in ogni pagina,
+porta a condensare i dati e a selezionare ciò che è essenziale illustrare.
+Inoltre, il libro è vincolato al limite della scala territoriale di
+rappresentazione: mentre una mappa digitale può essere ingrandita
+fino a coincidere con la stessa realtà che rappresenta, l’impaginazione
+cartacea in cui Bologna è presentata con una scala fissa
+(1:65000) costringe a decidere su un insieme limitato di risorse grafiche
+valide per questa scala.</p>
+<p class="testo">Infine, il libro attribuisce una struttura lineare all’Atlante, che può
+essere consultato a piacere ma che propone al tempo stesso un
+ordine e una struttura, indispensabili per descrivere la città e per
+comprendere ciò che viene raccontato su di essa.</p>
+<p class="testo">L’Atlante inizia spiegando chi sono, quanti sono e che caratteristiche
+hanno gli abitanti di Bologna, qual è il loro genere e come è
+associato alla fragilità, ai bisogni, ai comportamenti.</p>
+<p class="testo">Successivamente, ci dedichiamo a illustrare le diverse risorse urbane,
+ovvero quei servizi che la città fornisce agli abitanti per colmare
+le disuguaglianze, offrire sostegno, lavorare per la prosperità e l’integrazione
+sociale. Questa parte è divisa in due capitoli: da un lato
+parliamo delle strutture e di quelli che possiamo chiamare spazi
+chiusi, dall’altro degli spazi aperti (legati allo spazio pubblico, ai parchi
+o ai giardini) che, pur condividendo gli stessi obiettivi, è più semplice
+trattare separatamente a causa della loro disparità tipologica.</p>
+<p class="testo">Segue una panoramica sulla mobilità degli abitanti, sui flussi che
+collegano gli spazi e i servizi offerti dalla città, che consentono di
+comprendere più a fondo come il genere caratterizzi l’uso di tali
+spazi.</p>
+<p class="testo">Per concludere, mostriamo come il Comune sta lavorando alla trasformazione
+dell’ambiente in ognuno dei temi trattati, attraverso
+una mappa delle trasformazioni in corso, grazie a importanti investimenti.</p>
+<p class="testo">Le mappe e i temi affrontati sono talvolta più vicini alla nozione di
+“corpo”, ovvero a ciò che è direttamente relazionato alla sessualità,
+identificati con la lettera C. Altre mappe e temi affrontati sono più
+vicini alle idee di “ruolo” di genere, ai comportamenti e alle azioni
+legate alla cura che sono stati identificati con la lettera R. In alcuni
+casi entrambi i concetti espressi definiscono la mappatura in questione
+e quindi la lettera C e la lettera R sono utilizzate nella definizione
+della mappa.</p>
+
+<div class="blocco">
+<img src="icone_corpo_ruolo.png" alt="Icone corpo e ruolo">
+</div>
+</div>
+</div>
+
+
+<div class="nuova-pagina p-4col">
+<div class="blocco">
+
+<h2 class="titolo-sezione">I dati</h2>
+
+<p class="testo">Tutti i dati utilizzati in questo documento sono preziosi; sono stati
+elaborati principalmente da servizi comunali e sono parte di un
+processo in cui sono stati raccolti o prodotti, validati e pubblicati,
+trasformandoli in un patrimonio informativo funzionale a contribuire
+al benessere della popolazione del nostro territorio.</p>
+<p class="testo">Alcuni indicatori sono stati realizzati con l’Assistenza Tecnica (AT)
+della BEI. Ad esempio nell’indagine sulla qualità della vita che il Comune
+realizza ogni anno, l’AT della BEI ha suggerito l’introduzione o
+modifiche di alcune domande e ha elaborato degli indici compositi,
+che consentono di identificare e misurare in modo sintetico il divario
+di genere, l’impiego del tempo per il lavoro di cura e la percezione
+delle emozioni degli abitanti della città secondo il genere.[1]</p>
+<p class="testo">Durante questo percorso di assistenza tecnica da parte della BEI,
+l’Ufficio di Statistica nell’ambito dell’Area Programmazione e Statistica
+ha definito un nuovo indicatore di fragilità individuale e di
+divario di genere [2], che risulta essere più aggiornato e completo
+rispetto alla precedente versione grazie all’integrazione di nuove
+fonti di dati come quelli ottenuti dall’INPS (Istituto Nazionale della
+Previdenza Sociale) che hanno permesso di misurare in modo più
+preciso i redditi di bassa soglia del lavoro secondo il genere.</p>
+<p class="testo">I dati del Dipartimento di Welfare e Promozione del benessere di
+comunità [3] sono stati analizzati con il supporto della BEI con l’obiettivo
+di elaborare per la prima volta alcuni indici che ci permettono
+di individuare i diversi bisogni degli abitanti del Comune di Bologna
+e ci aiutano a comprendere piú accuratamente come vengono
+erogati i diversi servizi di welfare nella città.</p>
+<p class="testo">Inoltre, i nuovi dati del MMS (Mobility Management System)[4] sono
+stati utilizzati per la prima volta per descrivere la mobilità del lavoro a 
+livello di dettaglio sub-comunale. Tali dati ci hanno permesso di
+visualizzare il comportamento di mobilità secondo il genere diventando
+uno strumento che permetterà all’Ufficio di Statistica, oltre
+che, ovviamente, al Settore Mobilità sostenibile, di ottenere nuove
+preziose informazioni.</p>
+
+<h2 class="titolo-sezione">Uno strumento a supporto delle “Linee guida per
+progetti inclusivi dal punto di vista di genere”</h2>
+
+<p class="testo">I dati raccolti e in costante aggiornamento contenuti in questo libro
+di dati si possono considerare sia il quadro conoscitivo che lo strumento
+di monitoraggio per l’applicazione delle “Linee guida per
+progetti inclusivi dal punto di vista di genere”, quale manuale
+operativo a sostegno di una progettazione inclusiva che contribuisce
+ad indirizzare le scelte progettuali per gli interventi all’interno
+del territorio urbano.</p>
+<p class="testo">Le Linee guida sono uno strumento di supporto ai settori tecnici
+dell’Amministrazione, anche nel caso di processi partecipativi con
+i cittadini, con l’obiettivo di integrare la prospettiva di genere nella
+progettazione urbana.</p>
+<p class="testo">All’interno delle “Linee guida per progetti inclusivi dal punto di vista
+di genere” viene individuato il principale ambito di intervento “Sviluppo
+e la rigenerazione urbana” che si suddivide in tre sottoambiti
+di progettazione:</p>
+<p class="testo">- Spazio pubblico: strade, parchi e piazze</p>
+<p class="testo">- Mobilità sostenibile: la rete ciclabile</p>
+<p class="testo">- Edifici scolastici</p>
+<p class="testo">Per ogni ambito viene proposta una check list, sotto forma di quesiti
+specifici, a cui ogni progetto deve dare risposta. I quesiti sono
+raggruppati nei quattro gruppi di indicatori per la qualità urbana con prospettiva di genere:</p>
+<p class="testo">- Diversità</p>
+<p class="testo">- Prossimità</p>
+<p class="testo">- Sicurezza-Comfort</p>
+<p class="testo">- Autonomia e Accessibilità</p>
+
+<h2 class="titolo-sezione">La base cartografica di riferimento</h2>
+
+<p class="testo">Ogni mappa raccoglie dati da diverse fonti. Alcune mostrano una
+sola informazione, altre mostrano molteplici dati sovrapposti relativamente
+al tema a cui si riferisce la mappa. Tali dati si mostrano con
+distinte risoluzioni o dettaglio. In alcuni casi l’informazione si mostra
+a livello di quartiere, altre volte a livello di zona (area statistica minore
+utilizzata per numerose analisi dall’Ufficio di Statistica) oppure a
+livello di punto, dove è possibile mostrare precisamente la localizzazione
+esatta di una struttura o infrastruttura.</p>
+<p class="testo">Tutte le mappe sono costruite su una base cartografica che mostra
+la rete stradale, i limiti amministrativi ed i grandi parchi di cui dispone
+la città, i quali abitualmente sono considerati zone della città di
+riferimento per gli abitanti.</p>
+<p class="testo">Di seguito è possibile visualizzare la base della mappa utilizzata a cui
+si sovrarranno il resto delle informazioni.</p>
+
+<h2 class="titolo-sezione">Come si legge e come si usa</h2>
+
+<p class="testo">Ognuno dei cinque capitoli è suddiviso in paragrafi dove è possibile
+trovare le diverse rappresentazioni cartografiche, corredate di fonti
+e legenda e, per ogni mappa, è riportato anche il link (in formato qr
+code e indirizzo web completo), in modo da poterle scaricare e riutilizzare
+in analisi successive. Inoltre, le domande in forma di check list contenute nel documento “Linee guida per progetti inclusivi
+dal punto di vista di genere” sono state riproposte e incorporate
+in ciascuna delle mappe, in modo che i due documenti rimangano
+costantemente collegati.</p>
+<p class="testo">Come è stato enunciato in precedenza, questo lavoro sviluppa un
+processo in cui vengono raccolte le informazioni più rilevanti e
+vengono aggiunte nuove informazioni al fine di costruire un’unica
+narrazione che ha lo scopo di offrire, attraverso le mappe, una rappresentazione
+efficace del territorio urbano in grado di supportare
+decisioni mirate, anche grazie all’orientamento offerto dalle” “Linee
+guida per progetti inclusivi dal punto di vista di genere”.</p>
+<p class="testo">Ci auguriamo che questo libro sia di supporto al processo decisionale
+della città, che possa essere una risorsa per gli abitanti, una
+lettura sistematica dei servizi offerti in grado di evidenziare anche le
+molte opportunità e le eventuali carenze. Presentando informazioni
+chiare ed affidabili, speriamo di facilitare la realizzazione di azioni
+che portino alla riduzione delle disuguaglianze di genere, avvicinandoci
+così ad una società più equa.</p>
+
+<p class="testo">[1]<a href="https://inumeridibolognametropolitana.it/analisi-sul-benessere-e-sulla-qualita-della-vita">Analisi benessere e qualità della vita</a></p>
+<p class="testo">[2] <a href="https://inumeridibolognametropolitana.it/studi-e-ricerche/la-fragilita-individuale-e-la-disparita-di-genere">La fragilita individuale e la disparità di genere</a></p>
+<p class="testo">[3] <a href="https://inumeridibolognametropolitana.it/studi-e-ricerche/i-bisogni-socio-assistenziali-dei-bolognesi">I bisogni socio-assistenziali dei bolognesi</a></p>
+<p class="testo">[4] <a href="https://www.comune.bologna.it/servizi-informazioni/mobility-management">
+Mobility management</a></p>
+
+</div>
+</div>
+<div class="nuova-pagina pagina-2meta-grid">
+<div class="blocco">
+<img src="mancava.png" alt="Immagine non disponibile">
+</div>
+<div class="blocco">
+      
+<figure><iframe src="https://opendata.comune.bologna.it/explore/embed/dataset/bagni-pubblici/map/?disjunctive.tipologia&disjunctive.quartiere&location=13,44.50513,11.33676&basemap=jawg.streets&static=false&datasetcard=false&scrollWheelZoom=false" title="Mappa interattiva di genere - Bologna" ></iframe><figcaption>
+    Esempio
+  </figcaption></figure>
+   
+    </div>
+</div>
+
+<!-- INIZIO STRUTTURA -->
+<div class="nuova-pagina pagina-2-grid"> <div class="blocco"> <ol class="livello-1"> <li> <h2 class="titolo-sezione">
+Le persone
+</h2>
+<p class="testo">
+Questo primo capitolo presenta una descrizione degli abitanti di Bologna.
+Si concentra sulle segmentazioni demografiche relative sia all’età che al
+sesso delle persone che evidenziano le popolazioni più vulnerabili, su coloro
+che richiedono assistenza e su coloro che tradizionalmente la forniscono.
+</p></li></div>
+<div class="blocco"><div class="img-pagina"> <img src="
+persone.png
+" alt="
+Tre persone che camminano in un parco, sorridenti
+">
+</div></div></div>
+<div class="nuova-pagina pagina-2-grid"><div class="blocco"><ol class="livello-2"><li><h3 class="titolo-sottosezione">
+Abitanti
+</h3><p class="testo">
+La città di Bologna è la settima città d’Italia per popolazione con quasi 400.000
+abitanti ed una crescita annuale costante nel tempo.</p> <p class="testo">Le seguenti mappe mostrano la distribuzione della popolazione residente,
+segmentata per sesso ed età sull’intero territorio del Comune di Bologna.</p> <p class="testo">Le mappe evidenziano la popolazione giovanile (fascia d’età 0-14 anni), la popolazione
+in età avanzata (fascia d’età > 65 anni) e la popolazione anziana (fascia
+d’età > 75 anni) in quanto necessitano di maggiore sostegno ed assistenza.</p>
+</li></div><div class="blocco"><div class="img-pagina">
+<img src="
+strisce_pedonali.png
+" alt="
+Moltitudine di persone che attraversano la strada sulle strisce pedonali, viste dall'alto
+">
+</div></div></div>
+<div class="nuova-pagina pagina-3-grid"><div class="blocco"><img src="img_sinistra.png" alt="mappa semplice in bianco e nero di parte del territorio comunale" width=100%></div><div class="blocco"><br><img src="corpo.png" alt="Illustrazione corpo e ruolo" style="float:right;"><br><br><ol class="livello-3"><li><h4 class="titolo-paragrafo">
+La densità della popolazione residente
+</h4>
+<p class="testo">
+La seguente mappa mostra la densità di popolazione residente in ognuna delle aree statistiche della città, ovvero il numero di abitanti per ogni ettaro della città.</p><p class="testo">La suddivisione del territorio comunale in 90 aree statistiche
+risponde all’esigenza di definire una “griglia” di lettura più fine
+rispetto alla tradizionale suddivisione di Bologna in quartieri o
+zone e nello stesso tempo sufficientemente sintetica rispetto alla
+articolazione molto parcellizzata in sezioni censimento. Inoltre
+le aree statistiche sono la base territoriale usata per le analisi
+statistiche del Comune di Bologna e i suoi quartieri.</p><p class="testo">I dati rappresentati provengono dall’anagrafe della città di Bologna.</p><br>
+<table style="width:100%;"> <tr><td style="text-align:center; width:25%;" aria-hidden="true"><img src="
+QR01.png
+" alt="
+QR di rilancio verso sito web
+"></td><td style="width:75%;"><p class="testo1">
+Popolazione totale residente
+</p><p class="testo1">
+fonte: Popolazione residente per quartiere, zona e area statistica al 31 dicembre 2023 - I numeri di Bologna
+</p><p class="testo1"><a href="
+https://inumeridibolognametropolitana.it/dati-statistici/densita-di-popolazione-al-31-dicembre-serie-storica
+" target="_blank">
+Riferimento del dataset
+</a></p></td></tr></table>
+</li></div><div class="blocco">
+<figure><iframe src="
+https://nicolonepiva.github.io/mappe_genere/index.html#12/44.4914/11.3478"
+</div></div>
+"></iframe><figcaption>
+Mappa-La densità della popolazione residente
+</figcaption></figure></div>
+</div>
+<div class="nuova-pagina pagina-3-grid"><div class="blocco"><img src="img_sinistra.png" alt="mappa semplice in bianco e nero di parte del territorio comunale" width=100%></div><div class="blocco"><br><img src="corpo.png" alt="Illustrazione corpo e ruolo" style="float:right;"><br><br><ol class="livello-3"><li><h4 class="titolo-paragrafo">
+La densità della popolazione femminile giovanile
+</h4>
+<p class="testo">
+La popolazione femminile compresa tra 0 e 14 anni rappresenta il
+10,4% del totale della popolazione femminile complessiva nella città
+ed il 5,5% rispetto al totale della popolazione.</p><p class="testo">La seguente mappa mostra la densità di popolazione femminile
+residente compresa nella fascia d’età tra 0 e 14 anni in ognuna delle
+aree statistiche della città.</p><p class="testo">I dati rappresentati provengono dall’anagrafe della città di Bologna.</p><br>
+<table style="width:100%;"> <tr><td style="text-align:center; width:25%;" aria-hidden="true"><img src="
+QR02.png
+" alt="
+QR di rilancio verso sito web
+"></td><td style="width:75%;"><p class="testo1">
+Popolazione femminile residente 0-14 anni
+</p><p class="testo1">
+fonte: Popolazione residente per età, sesso, cittadinanza, quartiere,
+zona, area statistica - serie storica Open Data
+</p><p class="testo1"><a href="
+https://opendata.comune.bologna.it/explore/dataset/popolazione-residente-per-eta-sesso-cittadinanza-quartiere-zona-area-statistica-/information/?disjunctive.area_statistica&disjunctive.quartiere&disjunctive.zona&disjunctive.sesso&disjunctive.eta_grandi&disjunctive.eta&disjunctive.cittadinanza
+" target="_blank">
+Riferimento del dataset
+</a></p></td></tr></table>
+</li></div><div class="blocco">
+<figure><iframe src="
+https://nicolonepiva.github.io/mappe_genere/index.html#12/44.4914/11.3478"
+</div></div>
+"></iframe><figcaption>
+Mappa-La densità della popolazione femminile giovanile
+</figcaption></figure></div>
+</div>
+<div class="nuova-pagina pagina-3-grid"><div class="blocco"><img src="img_sinistra.png" alt="mappa semplice in bianco e nero di parte del territorio comunale" width=100%></div><div class="blocco"><br><img src="corpo.png" alt="Illustrazione corpo e ruolo" style="float:right;"><br><br><ol class="livello-3"><li><h4 class="titolo-paragrafo">
+La densità della popolazione femminile di età avanzata
+</h4>
+<p class="testo">
+La popolazione femminile maggiore di 65 anni rappresenta il 27,5%
+rispetto al totale delle femmine della città ed il 14,4% rispetto alla
+popolazione totale.</p><p class="testo">La seguente mappa mostra la densità di popolazione femminile
+residente maggiore di 65 anni in ognuna delle aree statistiche della
+città.</p><p class="testo">I dati rappresentati provengono dall’anagrafe della città di Bologna.</p><br>
+<table style="width:100%;"> <tr><td style="text-align:center; width:25%;" aria-hidden="true"><img src="
+QR03.png
+" alt="
+QR di rilancio verso sito web
+"></td><td style="width:75%;"><p class="testo1">
+Popolazione femminile residente > 65 anni
+</p><p class="testo1">
+fonte: Popolazione residente per età, sesso, cittadinanza, quartiere,
+zona, area statistica - serie storica Open Data
+</p><p class="testo1"><a href="
+https://opendata.comune.bologna.it/explore/dataset/popolazione-residente-per-eta-sesso-cittadinanza-quartiere-zona-area-statistica-/information/?disjunctive.area_statistica&disjunctive.quartiere&disjunctive.zona&disjunctive.sesso&disjunctive.eta_grandi&disjunctive.eta&disjunctive.cittadinanza
+" target="_blank">
+Riferimento del dataset
+</a></p></td></tr></table>
+</li></div><div class="blocco">
+<figure><iframe src="
+https://nicolonepiva.github.io/mappe_genere/index.html#12/44.4914/11.3478"
+</div></div>
+"></iframe><figcaption>
+Mappa-La densità della popolazione femminile di età avanzata
+</figcaption></figure></div>
+</div>
+<div class="nuova-pagina pagina-3-grid"><div class="blocco"><img src="img_sinistra.png" alt="mappa semplice in bianco e nero di parte del territorio comunale" width=100%></div><div class="blocco"><br><img src="corpo.png" alt="Illustrazione corpo e ruolo" style="float:right;"><br><br><ol class="livello-3"><li><h4 class="titolo-paragrafo">
+La densità della popolazione femminile anziana
+</h4>
+<p class="testo">
+La popolazione femminile maggiore di 75 anni rappresenta il 16,4%
+rispetto alla popolazione totale femminile e l’ 8,6% rispetto al totale
+della popolazione.</p><p class="testo">La seguente mappa mostra la densità di popolazione femminile
+maggiore di 75 anni residente in ognuna delle aree statistiche della
+città.</p><p class="testo">I dati rappresentati provengono dall’anagrafe della città di Bologna.</p><br>
+<table style="width:100%;"> <tr><td style="text-align:center; width:25%;" aria-hidden="true"><img src="
+QR04.png
+" alt="
+QR di rilancio verso sito web
+"></td><td style="width:75%;"><p class="testo1">
+Popolazione femminile residente > 75 anni
+</p><p class="testo1">
+fonte: Popolazione residente per età, sesso, cittadinanza, quartiere,
+zona, area statistica - serie storica Open Data
+</p><p class="testo1"><a href="
+https://opendata.comune.bologna.it/explore/dataset/popolazione-residente-per-eta-sesso-cittadinanza-quartiere-zona-area-statistica-/information/?disjunctive.area_statistica&disjunctive.quartiere&disjunctive.zona&disjunctive.sesso&disjunctive.eta_grandi&disjunctive.eta&disjunctive.cittadinanza%0D&disjunctive.cittadinanza
+" target="_blank">
+Riferimento del dataset
+</a></p></td></tr></table>
+</li></div><div class="blocco">
+<figure><iframe src="
+https://nicolonepiva.github.io/mappe_genere/index.html#12/44.4914/11.3478"
+</div></div>
+"></iframe><figcaption>
+Mappa-La densità della popolazione femminile anziana
+</figcaption></figure></div>
+</div>
+<div class="nuova-pagina pagina-3-grid"><div class="blocco"><img src="img_sinistra.png" alt="mappa semplice in bianco e nero di parte del territorio comunale" width=100%></div><div class="blocco"><br><img src="corpo.png" alt="Illustrazione corpo e ruolo" style="float:right;"><br><br><ol class="livello-3"><li><h4 class="titolo-paragrafo">
+Il bilancio della popolazione tra maschi e femmine
+</h4>
+<p class="testo">
+Come abbiamo visto nelle mappe precedenti la popolazione
+femminile non è proporzionale a quella maschile secondo fasce
+d’età, inoltre non è diffusa omogeneamente su tutto il territorio,
+essendo per lo più concentrata in alcune aree della città.</p><p class="testo">La seguente mappa mostra il bilanciamento fra maschi e femmine,
+ovvero la differente concentrazione di maschi e femmine rispetto
+al totale della popolazione residente in ogni area statistica.</p><p class="testo">I dati rappresentati provengono dall’anagrafe della città di Bologna.</p><br>
+<table style="width:100%;"> <tr><td style="text-align:center; width:25%;" aria-hidden="true"><img src="
+QR05.png
+" alt="
+QR di rilancio verso sito web
+"></td><td style="width:75%;"><p class="testo1">
+Rapporto popolazione residente maschi e femmine
+</p><p class="testo1">
+fonte: Popolazione residente per età, sesso, cittadinanza, quartiere,
+zona, area statistica - serie storica Open Data
+</p><p class="testo1"><a href="
+https://opendata.comune.bologna.it/explore/dataset/popolazione-residente-per-eta-sesso-cittadinanza-quartiere-zona-area-statistica-/information/?disjunctive.area_statistica&disjunctive.quartiere&disjunctive.zona&disjunctive.sesso&disjunctive.eta_grandi&disjunctive.eta&disjunctive.cittadinanza
+" target="_blank">
+Riferimento del dataset
+</a></p></td></tr></table>
+</li></div><div class="blocco">
+<figure><iframe src="
+https://nicolonepiva.github.io/mappe_genere/index.html#12/44.4914/11.3478"
+</div></div>
+"></iframe><figcaption>
+Mappa-Il bilancio della popolazione tra maschi e femmine
+</figcaption></figure></div>
+</div>
+<div class="nuova-pagina pagina-2-grid"><div class="blocco"><ol class="livello-2"><li><h3 class="titolo-sottosezione">
+Spazi dell'abitare
+</h3><p class="testo">
+Approssimativamente il 50% della superficie costruita nella città è destinata
+all’alloggio degli abitanti. Il seguente capitolo mostra dove sono situate le aree
+residenziali e le relative caratteristiche di qualità edilizia. L’intento è quello di
+mettere in relazione le precedenti segmentazioni demografiche con le disuguaglianze
+che presenta il tessuto urbano.</p> <p class="testo">Le caratteristiche delle abitazioni in cui risiede la popolazione possono contribuire
+ad accentuare la vulnerabilità, incrementare la dipendenza e la necessità
+di assistenza. Tali caratteristiche, come la qualità della casa o le sue
+dimensioni cambiano lentamente nel tempo di pari passo con il processo di
+rinnovamento dei tessuti urbani, costituendo così un elemento che condiziona
+inevitabilmente nel tempo la vita degli abitanti.</p>
+</li></div><div class="blocco"><div class="img-pagina">
+<img src="
+spazidellabitare.png
+" alt="
+Vista dall'alto di una piccola porzione di città, con al centro la cupola di una piccola chiesa
+">
+</div></div></div>
+<div class="nuova-pagina pagina-3-grid"><div class="blocco"><img src="img_sinistra.png" alt="mappa semplice in bianco e nero di parte del territorio comunale" width=100%></div><div class="blocco"><br><img src="ruolo.png" alt="Illustrazione corpo e ruolo" style="float:right;"><br><br><ol class="livello-3"><li><h4 class="titolo-paragrafo">
+Gli ambiti con uso residenziale
+</h4>
+<p class="testo">
+Il Comune di Bologna si estende per circa 14.000 ettari, tra i quali circa il
+20% è occupato da edificazioni residenziali che accolgono la popolazione.</p><p class="testo">La seguente mappa mostra gli ambiti occupati da edifici ad uso prevalentemente
+residenziale insieme alle superfici edificate destinate ad usi
+prevalentemente produttivi necessari per la città.</p><br>
+<table style="width:100%;"> <tr><td style="text-align:center; width:25%;" aria-hidden="true"><img src="
+QR06.png
+" alt="
+QR di rilancio verso sito web
+"></td><td style="width:75%;"><p class="testo1">
+Aree ad uso prevalentemente residenziale/produttivo
+</p><p class="testo1">
+fonte : 2020 - Coperture vettoriali uso del suolo di dettaglio
+- Edizione 2023
+</p><p class="testo1"><a href="
+https://geoportale.regione.emilia-romagna.it/catalogo/dati-cartografici/pianificazione-e-catasto/uso-del-suolo/layer-14
+" target="_blank">
+Riferimento del dataset
+</a></p></td></tr></table>
+</li></div><div class="blocco">
+<figure><iframe src="
+https://nicolonepiva.github.io/mappe_genere/index.html#12/44.4914/11.3478"
+</div></div>
+"></iframe><figcaption>
+Mappa-Gli ambiti con uso residenziale
+</figcaption></figure></div>
+</div>
+<div class="nuova-pagina pagina-3-grid"><div class="blocco"><img src="img_sinistra.png" alt="mappa semplice in bianco e nero di parte del territorio comunale" width=100%></div><div class="blocco"><br><img src="ruolo.png" alt="Illustrazione corpo e ruolo" style="float:right;"><br><br><ol class="livello-3"><li><h4 class="titolo-paragrafo">
+Le aree con bassa qualità
+edilizia
+</h4>
+<p class="testo">
+Il parco residenziale presenta diverse qualità costruttive che definiscono
+le condizioni di abitabilità degli immobili.</p><p class="testo">La seguente mappa mostra l’indicatore BQE (Indicatore composito di
+Bassa Qualità Edilizia) che stima una potenziale condizione di fragilità
+residenziale.</p><p class="testo">L’indicatore che viene mostrato è stato calcolato a partire dai dati catastali
+dei valori immobiliari e dalla descrizione dei nuclei familiari.</p><br>
+<table style="width:100%;"> <tr><td style="text-align:center; width:25%;" aria-hidden="true"><img src="
+QR07.png
+" alt="
+QR di rilancio verso sito web
+"></td><td style="width:75%;"><p class="testo1">
+Indicatore BQE ( Bassa Qualità Edilizia )
+</p><p class="testo1">
+fonte : La fragilità demografica, sociale ed economica
+nelle aree statistiche del comune di Bologna_2023
+</p><p class="testo1"><a href="
+https://inumeridibolognametropolitana.it/studi-e-ricerche/la-fragilita-demografica-sociale-ed-economica-nelle-diverse-aree-del-comune-di-0
+" target="_blank">
+Riferimento del dataset
+</a></p></td></tr></table>
+</li></div><div class="blocco">
+<figure><iframe src="
+https://nicolonepiva.github.io/mappe_genere/index.html#12/44.4914/11.3478"
+</div></div>
+"></iframe><figcaption>
+Mappa-Le aree con bassa qualità
+edilizia
+</figcaption></figure></div>
+</div>
+<div class="nuova-pagina pagina-3-grid"><div class="blocco"><img src="img_sinistra.png" alt="mappa semplice in bianco e nero di parte del territorio comunale" width=100%></div><div class="blocco"><br><img src="ruolo.png" alt="Illustrazione corpo e ruolo" style="float:right;"><br><br><ol class="livello-3"><li><h4 class="titolo-paragrafo">
+La percentuale di nuclei con
+spazio abitativo insufficiente
+</h4>
+<p class="testo">
+Il parco residenziale presenta una dimensione variabile che talvolta
+non è sufficiente per ospitare i gruppi di persone che vi risiedono, generando
+condizioni di sovraffollamento.</p><p class="testo">La seguente mappa mostra la stima di nuclei con spazio abitativo insufficiente
+che descrive situazioni di potenziale vulnerabilità residenziale.</p><p class="testo">L’indicatore che viene mostrato è stato calcolato a partire dai dati catastali
+e dalla descrizione dei nuclei familiari.</p><br>
+<table style="width:100%;"> <tr><td style="text-align:center; width:25%;" aria-hidden="true"><img src="
+QR08.png
+" alt="
+QR di rilancio verso sito web
+"></td><td style="width:75%;"><p class="testo1">
+La percentuale di nuclei con spazio abitativo insufficiente
+</p><p class="testo1">
+fonte: La fragilità demografica, sociale ed economica nelle aree statistiche
+del comune di Bologna_2023
+</p><p class="testo1"><a href="
+https://inumeridibolognametropolitana.it/studi-e-ricerche/la-fragilita-demografica-sociale-ed-economica-nelle-diverse-aree-del-comune-di-0
+" target="_blank">
+Riferimento del dataset
+</a></p></td></tr></table>
+</li></div><div class="blocco">
+<figure><iframe src="
+https://nicolonepiva.github.io/mappe_genere/index.html#12/44.4914/11.3478"
+</div></div>
+"></iframe><figcaption>
+Mappa-La percentuale di nuclei con
+spazio abitativo insufficiente
+</figcaption></figure></div>
+</div>
+<div class="nuova-pagina pagina-2-grid"><div class="blocco"><ol class="livello-2"><li><h3 class="titolo-sottosezione">
+Fragilità
+individuale e divario
+di genere
+</h3><p class="testo">
+Alcuni indicatori demografici, sociali ed economici descrivono efficacemente il
+territorio e la sua popolazione. La sintesi di tali dati in valori numerici sintetici agevola
+la lettura delle diverse aree della città e delle potenziali vulnerabilità, attraverso
+mappe tematizzate secondo l’intensità della fragilità espressa negli indici.
+Rispetto all’analisi annuale della potenziale fragilità del territorio[5] distinta nei tre
+ambiti demografico, sociale ed economico, abbiamo elaborato delle nuove mappe
+formulando degli indicatori declinati prettamente sul singolo e non sul nucleo
+familiare e sulle abitazioni: una derivazione in scala ridotta, ma con la medesima
+metodologia, che consente di far emergere la potenziale fragilità dell’individuo
+nel territorio e il divario uomo-donna, evidenziando la maggiore incidenza della
+vulnerabilità femminile rispetto a quella maschile nelle aree della città che presentano
+maggior squilibrio tra uomini e donne.</br>
+Le diverse fragilità mostrano sia la vulnerabilità della popolazione che la sua relativa
+capacità di adattamento alle avversità esterne. La possibilità di conoscere le
+diverse potenziali fragilità individuali della popolazione e il loro divario di genere
+può aiutarci a indirizzare in modo più efficace le azioni e i servizi che dovrebbero
+arginarla.</p>
+</li></div><div class="blocco"><div class="img-pagina">
+<img src="
+piazzasantostefano.png
+" alt="
+Piazza Santo Stefano fotografata dal centro della piazza verso le torri
+">
+</div></div></div>
+<div class="nuova-pagina pagina-3-grid">  <div class="blocco">   <br><br><table style="width:100%;"> 
+      <tr>
+        <td style="text-align:center; width:25%;" aria-hidden="true">
+          <img src="
+QR09.png
+" alt="
+QR di rilancio verso sito web
+">
+        </td>
+        <td style="width:75%;">
+          <p class="testo1">
+Fragilità demografica, sociale, economica, globale individuale
+e divario di genere
+</p><p class="testo1">
+fonte : La fragilità individuale e la disparità di genere - 2023
+</p><p class="testo1"><a href="
+https://inumeridibolognametropolitana.it/studi-e-ricerche/la-fragilita-individuale-e-la-disparita-di-genere
+" target="_blank">
+Riferimento del dataset
+</a></p></td>
+      </tr>
+    </table>
+  </div> 
+  <div class="blocco">
+    <br><img src="icone_corpo_ruolo_orizzontali.png" alt="Icone corpo e ruolo"  style="float:right; width: 100px;"><br><br><br>
+    <ol class="livello-3">
+      <li>
+        <h4 class="titolo-paragrafo">
+Indice di potenziale fragilità
+socio-demografica individuale e
+divario di genere
+</h4>
+<p class="testo">
+La seguente mappa mostra l’indice sintetico di potenziale fragilità
+socio-demografica individuale calcolato dall’Ufficio di Statistica
+del Comune di Bologna con la collaborazione della BEI,a partire
+dagli indicatori analitici degli ambiti demografico e sociale, usando
+dati che descrivono il numero di persone laureate, persone anziane
+con necessità speciali e la composizione familiare, ecc. I dati utilizzati
+provengono dall’anagrafe, dal censimento, dall’indicatore di bassa
+intensità lavorativa, dall’AUSL (Azienda Unità Sanitaria Locale) e
+dall’INPS(Istituto Nazionale di Previdenza Sociale).</p><p class="testo">La medesima informazione è stata elaborata con una segmentazione
+di genere che ci permette di mettere in evidenza dove le donne sono
+più fragili degli uomini con una visione sociale.</p><p class="testo">In questo modo possiamo osservare dove si verifica una maggiore
+fragilità socio-demografica individuale (attraverso il colore assegnato
+ad ogni area statistica) e al tempo stesso quando la fragilità è
+caratterizzata da un divario di genere sfavorevole per le donne
+(indicato con il punto in primo piano).</p><br>
+</a></p></td></tr></table>
+</li></div><div class="blocco">
+<figure><iframe src="
+https://nicolonepiva.github.io/mappe_genere/index.html#12/44.4914/11.3478"
+</div></div>
+"></iframe><figcaption>
+Mappa-Indice di potenziale fragilità
+socio-demografica individuale e
+divario di genere
+</figcaption></figure></div>
+</div>
+<div class="nuova-pagina pagina-3-grid">  <div class="blocco">   <br><br><table style="width:100%;"> 
+      <tr>
+        <td style="text-align:center; width:25%;" aria-hidden="true">
+          <img src="
+QR10.png
+" alt="
+QR di rilancio verso sito web
+">
+        </td>
+        <td style="width:75%;">
+          <p class="testo1">
+Fragilità demografica, sociale, economica, globale individuale
+e divario di genere
+</p><p class="testo1">
+fonte: La fragilità individuale e la disparità di genere - 2023
+</p><p class="testo1"><a href="
+https://inumeridibolognametropolitana.it/studi-e-ricerche/la-fragilita-individuale-e-la-disparita-di-genere
+" target="_blank">
+Riferimento del dataset
+</a></p></td>
+      </tr>
+    </table>
+  </div> 
+  <div class="blocco">
+    <br><img src="icone_corpo_ruolo_orizzontali.png" alt="Icone corpo e ruolo"  style="float:right; width: 100px;"><br><br><br>
+    <ol class="livello-3">
+      <li>
+        <h4 class="titolo-paragrafo">
+Indice di potenziale fragilità
+economica individuale e divario
+di genere
+</h4>
+<p class="testo">
+La seguente mappa mostra l’indice sintetico di potenziale fragilità
+economica individuale, calcolato dall’Ufficio di Statistica del
+Comune di Bologna con la collaborazione della BEI, a partire dagli
+indicatori analitici del rispettivo ambito. I dati utilizzati provengono
+dall’INPS (Istituto Nazionale di Previdenza Sociale).
+e dall’anagrafe, essi descrivono il reddito pro capite mediano e gli
+abitanti con reddito sotto soglia.</p><p class="testo">La medesima informazione è stata elaborata con una segmentazione
+di genere che ci permette di mettere in evidenza dove le donne
+sono più fragili degli uomini con una visione economica.</p><p class="testo">In questo modo possiamo osservare dove si verifica una maggiore
+fragilità economica individuale (attraverso il colore assegnato ad
+ogni area statistica) e al tempo stesso quando la fragilità è caratterizzata
+da un divario di genere sfavorevole per le donne (indicato
+con il punto in primo piano).</p><br>
+</a></p></td></tr></table>
+</li></div><div class="blocco">
+<figure><iframe src="
+https://nicolonepiva.github.io/mappe_genere/index.html#12/44.4914/11.3478"
+</div></div>
+"></iframe><figcaption>
+Mappa-Indice di potenziale fragilità
+economica individuale e divario
+di genere
+</figcaption></figure></div>
+</div>
+<div class="nuova-pagina pagina-3-grid">  <div class="blocco">   <br><br><table style="width:100%;"> 
+      <tr>
+        <td style="text-align:center; width:25%;" aria-hidden="true">
+          <img src="
+QR11.png
+" alt="
+QR di rilancio verso sito web
+">
+        </td>
+        <td style="width:75%;">
+          <p class="testo1">
+Fragilità demografica, sociale, economica, globale individuale
+e divario di genere
+</p><p class="testo1">
+fonte: La fragilità individuale e la disparità di genere - 2023
+</p><p class="testo1"><a href="
+https://inumeridibolognametropolitana.it/studi-e-ricerche/la-fragilita-individuale-e-la-disparita-di-genere
+" target="_blank">
+Riferimento del dataset
+</a></p></td>
+      </tr>
+    </table>
+  </div> 
+  <div class="blocco">
+    <br><img src="icone_corpo_ruolo_orizzontali.png" alt="Icone corpo e ruolo"  style="float:right; width: 100px;"><br><br><br>
+    <ol class="livello-3">
+      <li>
+        <h4 class="titolo-paragrafo">
+Indice di potenziale fragilità
+globale individuale e divario di
+genere
+</h4>
+<p class="testo">
+La seguente mappa mostra l’indice di potenziale fragilità individuale delle persone nel territorio, calcolato dall’Ufficio di Statistica del
+Comune di Bologna con l’AT della BEI, utilizzando un sottogruppo
+di indicatori della fragilità demografica, sociale ed economica.</p><p class="testo">La medesima informazione è stata elaborata con una segmentazione
+di genere che ci permette di mettere in evidenza dove le
+donne sono più fragili degli uomini.</p><p class="testo">In questo modo possiamo osservare dove si verifica una maggiore
+fragilità globale individuale (attraverso il colore assegnato ad ogni
+area statistica) e al tempo stesso quando la fragilità è caratterizzata
+da un divario di genere sfavorevole per le donne (indicato con il
+punto in primo piano).</p><br>
+</a></p></td></tr></table>
+</li></div><div class="blocco">
+<figure><iframe src="
+https://nicolonepiva.github.io/mappe_genere/index.html#12/44.4914/11.3478"
+</div></div>
+"></iframe><figcaption>
+Mappa-Indice di potenziale fragilità
+globale individuale e divario di
+genere
+</figcaption></figure></div>
+</div>
+<div class="nuova-pagina pagina-2-grid"><div class="blocco"><ol class="livello-2"><li><h3 class="titolo-sottosezione">
+Bisogni
+</h3><p class="testo">
+Di seguito, riportiamo una serie di mappe realizzate a partire dai dati raccolti
+dal Dipartimento di Welfare e Promozione del Benessere di comunità del
+Comune di Bologna[9] relativi alle richieste degli abitanti (accesso) ed i servizi
+che sono stati erogati (autorizzati). In questo modo è possibile mostrare in
+quali luoghi della città sia percepita una maggiore necessità di intervenire e
+la tipologia di supporto richiesto, permettendo di affinare la descrizione delle
+fragilità presentata in precedenza.</br>
+I seguenti indici mostrano i valori in chiave di genere. Nel caso della prima
+mappa (1.4.1 L’accesso ai servizi di welfare) l’informazione si presenta segmentata
+per sesso. Le mappe successive mostrano la relazione tra i bisogni autorizzati
+alle donne ed i bisogni autorizzati agli uomini. Tutte le mappe mostrano
+una chiara differenza tra i diversi servizi autorizzati secondo il sesso mettendo
+in evidenza come i bisogni della popolazione sono caratterizzati da esso.</p>
+</li></div><div class="blocco"><div class="img-pagina">
+<img src="
+piazzasantostefano2.png
+" alt="
+Piazza Santo Stefano fotografata dal lato strada Maggiore verso le torri
+">
+</div></div></div>
+<div class="nuova-pagina pagina-3-grid"><div class="blocco"><img src="img_sinistra.png" alt="mappa semplice in bianco e nero di parte del territorio comunale" width=100%></div><div class="blocco"><br><img src="icone_corpo_ruolo_orizzontali.png" alt="Illustrazione corpo e ruolo" style="float:right; width: 100px;"><br><br><ol class="livello-3"><li><h4 class="titolo-paragrafo">
+L’accesso ai servizi di welfare
+</h4>
+<p class="testo">
+La seguente mappa mostra un indicatore costruito a partire dai
+dati raccolti dal Dipartimento di Welfare e Promozione del Benessere
+di comunità del Comune di Bologna, ossia le richieste fatte
+attraverso i vari sportelli dedicati nella città. L’indicatore riflette
+la proporzione (tasso) del numero degli abitanti che hanno fatto
+almeno un accesso nel 2023 ai diversi sportelli welfare della città.</p><br>
+<table style="width:100%;"> <tr><td style="text-align:center; width:25%;" aria-hidden="true"><img src="
+QR12.png
+" alt="
+QR di rilancio verso sito web
+"></td><td style="width:75%;"><p class="testo1">
+Accesso ai servizi di welfare
+</p><p class="testo1">
+fonte: I bisogni socio assistenziali dei bolognesi -
+2023
+</p><p class="testo1"><a href="
+https://inumeridibolognametropolitana.it/studi-e-ricerche/i-bisogni-socio-assistenziali-dei-bolognesi
+" target="_blank">
+Riferimento del dataset
+</a></p></td></tr></table>
+</li></div><div class="blocco">
+<figure><iframe src="
+https://nicolonepiva.github.io/mappe_genere/index.html#12/44.4914/11.3478"
+</div></div>
+"></iframe><figcaption>
+Mappa-L’accesso ai servizi di welfare
+</figcaption></figure></div>
+</div>
+<div class="nuova-pagina pagina-3-grid"><div class="blocco"><img src="img_sinistra.png" alt="mappa semplice in bianco e nero di parte del territorio comunale" width=100%></div><div class="blocco"><br><img src="icone_corpo_ruolo_orizzontali.png" alt="Illustrazione corpo e ruolo" style="float:right; width: 100px;"><br><br><ol class="livello-3"><li><h4 class="titolo-paragrafo">
+I bisogni autorizzati di
+contributi economici
+</h4>
+<p class="testo">
+La seguente mappa mostra la differenza di proporzione per genere
+(femmine in relazione ai maschi) degli abitanti che hanno
+ottenuto qualche servizio rispetto al totale. Questo indicatore
+ci permette di osservare come, in base al genere, sono stati distribuiti
+gli aiuti per le necessità economiche autorizzati dal Comune.</p><br>
+<table style="width:100%;"> <tr><td style="text-align:center; width:25%;" aria-hidden="true"><img src="
+QR13.png
+" alt="
+QR di rilancio verso sito web
+"></td><td style="width:75%;"><p class="testo1">
+Bisogni autorizzati di contributi economici
+</p><p class="testo1">
+fonte: I bisogni socio assistenziali dei bolognesi -
+2023
+</p><p class="testo1"><a href="
+https://inumeridibolognametropolitana.it/studi-e-ricerche/i-bisogni-socio-assistenziali-dei-bolognesi
+" target="_blank">
+Riferimento del dataset
+</a></p></td></tr></table>
+</li></div><div class="blocco">
+<figure><iframe src="
+https://nicolonepiva.github.io/mappe_genere/index.html#12/44.4914/11.3478"
+</div></div>
+"></iframe><figcaption>
+Mappa-I bisogni autorizzati di
+contributi economici
+</figcaption></figure></div>
+</div>
+<div class="nuova-pagina pagina-3-grid"><div class="blocco"><img src="img_sinistra.png" alt="mappa semplice in bianco e nero di parte del territorio comunale" width=100%></div><div class="blocco"><br><img src="icone_corpo_ruolo_orizzontali.png" alt="Illustrazione corpo e ruolo" style="float:right; width: 100px;"><br><br><ol class="livello-3"><li><h4 class="titolo-paragrafo">
+I bisogni autorizzati di
+segretariato sociale
+</h4>
+<p class="testo">
+La seguente mappa mostra la differenza di proporzione per genere
+(femmine in relazione ai maschi) degli abitanti che hanno ottenuto
+qualche servizio rispetto al totale. Questo indicatore ci permette
+di osservare come, in base al genere, sono stati distribuiti gli aiuti
+per le necessità di segretariato sociale autorizzati dal Comune.<br>Il segretariato sociale è un’attività di servizio volta a garantire unitarietà
+di accesso, ascolto, orientamento, accompagnamento, attività
+di analisi della domanda, collegamento e sviluppo delle collaborazioni
+anche con altri soggetti, pubblici e privati.</p><br>
+<table style="width:100%;"> <tr><td style="text-align:center; width:25%;" aria-hidden="true"><img src="
+QR14.png
+" alt="
+QR di rilancio verso sito web
+"></td><td style="width:75%;"><p class="testo1">
+Bisogni autorizzati di segretariato sociale
+</p><p class="testo1">
+fonte: I bisogni socio assistenziali dei bolognesi -
+2023
+</p><p class="testo1"><a href="
+https://inumeridibolognametropolitana.it/studi-e-ricerche/i-bisogni-socio-assistenziali-dei-bolognesi
+" target="_blank">
+Riferimento del dataset
+</a></p></td></tr></table>
+</li></div><div class="blocco">
+<figure><iframe src="
+https://nicolonepiva.github.io/mappe_genere/index.html#12/44.4914/11.3478"
+</div></div>
+"></iframe><figcaption>
+Mappa-I bisogni autorizzati di
+segretariato sociale
+</figcaption></figure></div>
+</div>
+<div class="nuova-pagina pagina-3-grid"><div class="blocco"><img src="img_sinistra.png" alt="mappa semplice in bianco e nero di parte del territorio comunale" width=100%></div><div class="blocco"><br><img src="icone_corpo_ruolo_orizzontali.png" alt="Illustrazione corpo e ruolo" style="float:right; width: 100px;"><br><br><ol class="livello-3"><li><h4 class="titolo-paragrafo">
+I bisogni autorizzati di
+servizi sociali
+</h4>
+<p class="testo">
+La seguente mappa mostra la differenza di proporzione per genere
+(femmine in relazione ai maschi) degli abitanti che hanno
+ottenuto qualche servizio rispetto al totale.
+Questo indicatore ci permette di osservare come, in base al genere,
+sono stati distribuiti gli aiuti per le necessità di servizi sociali
+autorizzati dal Comune.</p><br>
+<table style="width:100%;"> <tr><td style="text-align:center; width:25%;" aria-hidden="true"><img src="
+QR15.png
+" alt="
+QR di rilancio verso sito web
+"></td><td style="width:75%;"><p class="testo1">
+Bisogni autorizzati di servizi sociali
+</p><p class="testo1">
+fonte: I bisogni socio assistenziali dei bolognesi -
+2023
+</p><p class="testo1"><a href="
+https://inumeridibolognametropolitana.it/studi-e-ricerche/i-bisogni-socio-assistenziali-dei-bolognesi
+" target="_blank">
+Riferimento del dataset
+</a></p></td></tr></table>
+</li></div><div class="blocco">
+<figure><iframe src="
+https://nicolonepiva.github.io/mappe_genere/index.html#12/44.4914/11.3478"
+</div></div>
+"></iframe><figcaption>
+Mappa-I bisogni autorizzati di
+servizi sociali
+</figcaption></figure></div>
+</div>
+<div class="nuova-pagina pagina-2-grid"><div class="blocco"><ol class="livello-2"><li><h3 class="titolo-sottosezione">
+Cure e autonomia
+</h3><p class="testo">
+Grazie all’indagine sulla qualità della vita realizzata nel 2023[14]. In esso
+descriviamo la diversa percezione della qualità di vita tra uomini e donne
+con l’intento di dimostrare un pregiudizio di genere nel sostenere le
+mansioni legate alla cura della famiglia e di persone amiche.</br>Quando si parla di “cura” ci si riferisce all’insieme dei compiti che producono
+beni e servizi necessari per la rigenerazione quotidiana del benessere
+fisico ed emotivo delle persone che si producono normalmente in
+circuiti intimi e nella cornice domestica.</br>In termini generali le donne presentano un maggior carico di cura, una
+maggiore dipendenza economica nella relazione di coppia ed una maggiore
+espressione negativa rispetto agli uomini.</p>
+</li></div><div class="blocco"><div class="img-pagina">
+<img src="
+palazzibologna.png
+" alt="
+Palazzi di Bologna
+">
+</div></div></div>
+<div class="nuova-pagina pagina-3-grid"><div class="blocco"><img src="img_sinistra.png" alt="mappa semplice in bianco e nero di parte del territorio comunale" width=100%></div><div class="blocco"><br><img src="icone_corpo_ruolo_orizzontali.png" alt="Illustrazione corpo e ruolo" style="float:right; width: 100px;"><br><br><ol class="livello-3"><li><h4 class="titolo-paragrafo">
+Indice del carico di cura
+</h4>
+<p class="testo">
+Grazie all’indagine sulla qualità della vita realizzata nel 2023 è stato
+possibile elaborare un indice che esprime il carico totale dei rispondenti
+in termini di cura nei confronti di familiari e altre persone a carico, anche
+non conviventi. Considerando i rispondenti che hanno responsabilità di
+cura verso almeno una persona a carico, è stato rappresentato il divario
+di genere inteso come rapporto (disparità) tra il valore dell’indicatore
+per le donne e quello per gli uomini nei diversi quartieri. Maggiore è il
+valore rappresentato maggiore sarà il contributo delle donne nella cura
+della famiglia e di persone a carico.</p><br>
+<table style="width:100%;"> <tr><td style="text-align:center; width:25%;" aria-hidden="true"><img src="
+QR16.png
+" alt="
+QR di rilancio verso sito web
+"></td><td style="width:75%;"><p class="testo1">
+Indice del carico di cura
+</p><p class="testo1">
+fonte: Indagine Qualità di Vita 2023 - I numeri di Bologna
+</p><p class="testo1"><a href="
+https://inumeridibolognametropolitana.it/analisi-sul-benessere-e-sulla-qualita-della-vita
+" target="_blank">
+Riferimento del dataset
+</a></p></td></tr></table>
+</li></div><div class="blocco">
+<figure><iframe src="
+https://nicolonepiva.github.io/mappe_genere/index.html#12/44.4914/11.3478"
+</div></div>
+"></iframe><figcaption>
+Mappa-Indice del carico di cura
+</figcaption></figure></div>
+</div>
+<div class="nuova-pagina pagina-3-grid"><div class="blocco"><img src="img_sinistra.png" alt="mappa semplice in bianco e nero di parte del territorio comunale" width=100%></div><div class="blocco"><br><img src="icone_corpo_ruolo_orizzontali.png" alt="Illustrazione corpo e ruolo" style="float:right; width: 100px;"><br><br><ol class="livello-3"><li><h4 class="titolo-paragrafo">
+Indice di dipendenza economica
+</h4>
+<p class="testo">
+Grazie all’indagine sulla qualità della vita realizzata nel 2023
+è stato possibile elaborare un indice che esprime il grado di
+dipendenza economica, ovvero la possibilità di disporre delle
+proprie risorse economiche in autonomia. La valutazione sulla
+dipendenza economica all’interno delle coppie è fondamentale
+per individuare eventuali situazioni di fragilità e per mettere in
+atto strategie di intervento sul territorio. È stato rappresentato
+il divario di genere inteso come rapporto (disparità) tra il valore
+dell’indicatore per le donne e quello per gli uomini nei diversi
+quartieri. Maggiore è il valore rappresentato maggiore sarà
+la percentuale di donne con elevata o parziale dipendenza
+economica.</p><br>
+<table style="width:100%;"> <tr><td style="text-align:center; width:25%;" aria-hidden="true"><img src="
+QR17.png
+" alt="
+QR di rilancio verso sito web
+"></td><td style="width:75%;"><p class="testo1">
+Indice di dipendenza economica
+</p><p class="testo1">
+fonte: Indagine Qualità di Vita 2023 - I numeri di Bologna
+</p><p class="testo1"><a href="
+https://inumeridibolognametropolitana.it/analisi-sul-benessere-e-sulla-qualita-della-vita
+" target="_blank">
+Riferimento del dataset
+</a></p></td></tr></table>
+</li></div><div class="blocco">
+<figure><iframe src="
+https://nicolonepiva.github.io/mappe_genere/index.html#12/44.4914/11.3478"
+</div></div>
+"></iframe><figcaption>
+Mappa-Indice di dipendenza economica
+</figcaption></figure></div>
+</div>
+<div class="nuova-pagina pagina-3-grid">  <div class="blocco">   <br><br><table style="width:100%;"> 
+      <tr>
+        <td style="text-align:center; width:25%;" aria-hidden="true">
+          <img src="
+QR18.png
+" alt="
+QR di rilancio verso sito web
+">
+        </td>
+        <td style="width:75%;">
+          <p class="testo1">
+Indice della percezione complessiva del proprio benessere
+psico-emotivo
+</p><p class="testo1">
+fonte: Indagine Qualità di Vita 2023 - I numeri di Bologna
+</p><p class="testo1"><a href="
+https://inumeridibolognametropolitana.it/analisi-sul-benessere-e-sulla-qualita-della-vita
+" target="_blank">
+Riferimento del dataset
+</a></p></td>
+      </tr>
+    </table>
+  </div> 
+  <div class="blocco">
+    <br><img src="icone_corpo_ruolo_orizzontali.png" alt="Icone corpo e ruolo"  style="float:right; width: 100px;"><br><br><br>
+    <ol class="livello-3">
+      <li>
+        <h4 class="titolo-paragrafo">
+Indice della percezione
+complessiva del proprio
+benessere psico-emotivo
+</h4>
+<p class="testo">
+Grazie all’indagine sulla qualità della vita realizzata nel 2023[17] è stato
+possibile elaborare un indice in grado di sintetizzare le emozioni
+percepite dai rispondenti nei mesi precedenti l’indagine.
+L’indagine ha permesso agli abitanti di indicare spontaneamente
+tra diverse emozioni percepite come tristezza, rabbia, paura, fiducia,
+gioia, angoscia, speranza, incertezza, gratitudine, vulnerabilità e
+rassegnazione.</p><p class="testo">Successivamente, classificando le emozioni in positive e negative e
+aggregando le risposte, si è valutata la percezione complessiva del
+proprio stato d’animo nei rispondenti. Tale dato può essere usato come
+proxy per il benessere psico-emotivo percepito dai cittadini. È stato
+rappresentato il divario di genere inteso come rapporto (disparità)
+tra il valore dell’indicatore per le donne e quello per gli uomini nei
+diversi quartieri. Maggiore è il valore rappresentato maggiore sarà la
+percentuale di donne con elevata percezione di emozioni negative.</p><br>
+</a></p></td></tr></table>
+</li></div><div class="blocco">
+<figure><iframe src="
+https://nicolonepiva.github.io/mappe_genere/index.html#12/44.4914/11.3478"
+</div></div>
+"></iframe><figcaption>
+Mappa-Indice della percezione
+complessiva del proprio
+benessere psico-emotivo
+</figcaption></figure></div>
+</div>
+<div class="nuova-pagina pagina-3-grid"><div class="blocco"><img src="img_sinistra.png" alt="mappa semplice in bianco e nero di parte del territorio comunale" width=100%></div><div class="blocco"><br><img src="icone_corpo_ruolo_orizzontali.png" alt="Illustrazione corpo e ruolo" style="float:right; width: 100px;"><br><br><ol class="livello-3"><li><h4 class="titolo-paragrafo">
+Indice di qualità della vita
+nel Comune
+</h4>
+<p class="testo">
+La qualità della vita nel Comune di Bologna è complessivamente
+alta, con più di tre quarti delle persone rispondenti che hanno
+espresso un voto valido (73,8 %) che le attribuiscono una
+valutazione più che positiva (voti tra 7 e 10). Nel resto della Città
+metropolitana il punteggio risulta più elevato (il 76,9 % ).<br> Sebbene i risultati ottenuti mostrino valori simili per i diversi sessi,
+gli uomini percepiscono la città in modo più positivo rispetto
+alle donne. Un valore che, tuttavia, assume proporzioni diverse
+se osserviamo i risultati per ogni quartiere della città, dove la
+distanza tra le opinioni per genere è maggiore.</p><br>
+<table style="width:100%;"> <tr><td style="text-align:center; width:25%;" aria-hidden="true"><img src="
+QR19.png
+" alt="
+QR di rilancio verso sito web
+"></td><td style="width:75%;"><p class="testo1">
+Indice di qualità di vita nel comune
+</p><p class="testo1">
+fonte: Indagine Qualità di Vita 2023 - I numeri di
+Bologna
+</p><p class="testo1"><a href="
+https://inumeridibolognametropolitana.it/analisi-sul-benessere-e-sulla-qualita-della-vita
+" target="_blank">
+Riferimento del dataset
+</a></p></td></tr></table>
+</li></div><div class="blocco">
+<figure><iframe src="
+https://nicolonepiva.github.io/mappe_genere/index.html#12/44.4914/11.3478"
+</div></div>
+"></iframe><figcaption>
+Mappa-Indice di qualità della vita
+nel Comune
+</figcaption></figure></div>
+</div>
+<div class="nuova-pagina pagina-3-grid"><div class="blocco"><img src="img_sinistra.png" alt="mappa semplice in bianco e nero di parte del territorio comunale" width=100%></div><div class="blocco"><br><img src="icone_corpo_ruolo_orizzontali.png" alt="Illustrazione corpo e ruolo" style="float:right; width: 100px;"><br><br><ol class="livello-3"><li><h4 class="titolo-paragrafo">
+Indice di qualità della vita
+nell’area in cui le persone abitano
+</h4>
+<p class="testo">
+La percezione sulla qualità della vita nel proprio quartiere risulta
+analoga a quella rilevata nel Comune dove poco più di tre quarti
+delle persone rispondenti (il 73,9%) attribuiscono al quartiere un
+voto tra 7 e 10; decisamente più alta la percentuale per il resto
+della Città metropolitana (78,4%).<br> Sebbene i risultati ottenuti mostrino valori simili per i diversi sessi,
+gli uomini percepiscono la città in modo lievemente migliore
+rispetto alle donne. Un valore che, tuttavia, assume proporzioni
+diverse se osserviamo i risultati per ogni quartiere della città,
+dove la distanza tra le opinioni per genere è maggiore.</p><br>
+<table style="width:100%;"> <tr><td style="text-align:center; width:25%;" aria-hidden="true"><img src="
+QR20.png
+" alt="
+QR di rilancio verso sito web
+"></td><td style="width:75%;"><p class="testo1">
+Indice di qualità di vita nell’area in cui le persone abitano
+</p><p class="testo1">
+fonte: Indagine Qualità di Vita 2023 - I numeri di Bologna
+</p><p class="testo1"><a href="
+https://inumeridibolognametropolitana.it/analisi-sul-benessere-e-sulla-qualita-della-vita
+" target="_blank">
+Riferimento del dataset
+</a></p></td></tr></table>
+</li></div><div class="blocco">
+<figure><iframe src="
+https://nicolonepiva.github.io/mappe_genere/index.html#12/44.4914/11.3478"
+</div></div>
+"></iframe><figcaption>
+Mappa-Indice di qualità della vita
+nell’area in cui le persone abitano
+</figcaption></figure></div>
+</div>
+<div class="nuova-pagina pagina-2-grid"> <div class="blocco"> <ol class="livello-1"> <li> <h2 class="titolo-sezione">
+Le strutture
+</h2>
+<p class="testo">
+Diverse strutture in città forniscono servizi essenziali per lo sviluppo
+della persona (salute, istruzione, ecc.).<br><br>Inoltre, i servizi erogati facilitano la conciliazione nella vita quotidiana
+e rendono i Quartieri dei luoghi vitali che incoraggiano l’interazione
+sociale e l’autonomia.<br><br>Il seguente capitolo illustra le principali strutture essenziali per la
+cura e lo sviluppo personale, con un’enfasi su quelle che rispondono
+specificamente alle esigenze delle donne, facendo anche riferimento
+alle popolazioni che necessitano di maggiore assistenza.
+</p></li></div>
+<div class="blocco"><div class="img-pagina"> <img src="
+nonno_nipote.png
+" alt="
+Un nonno e un nipote giocano a scacchi in salotto
+">
+</div></div></div>
+<div class="nuova-pagina pagina-2-grid"><div class="blocco"><ol class="livello-2"><li><h3 class="titolo-sottosezione">
+Strutture per l'assistenza sociale
+</h3><p class="testo">
+Le seguenti mappe identificano una selezione di strutture destinate ll’assistenza
+sociale. Da un lato, le varie strutture sanitarie e dall’altro le strutture specifiche
+per le donne, quelle per le persone anziane e le strutture di assistenza pubblica.
+Esse sono essenziali per la cura e il benessere delle persone.<br><br>
+Domande delle “Linee guida per progetti inclusivi dal punto di vista di genere”
+alle quali l’Atlante può aiutare a fornire le prime risposte<br><br> Diversità / Diversità e Prossimità <br><br>Esiste una rete di luoghi pubblici e del commercio tale da soddisfare le esigenze
+di persone diverse e le varie attività della vita quotidiana, sia riproduttive che
+produttive nel raggio di percorrenza di 15 minuti a piedi? (spazi con funzioni
+di commercio di vicinato, servizi di vicinato, salute, sport, istruzione, cultura,
+sociale, verde) </p>
+</li></div><div class="blocco"><div class="img-pagina">
+<img src="
+unione_mani.png
+" alt="
+Varie persone che uniscono le loro mani tra loro
+">
+</div></div></div>
+<div class="nuova-pagina pagina-3-grid">  <div class="blocco">   <br><br><table style="width:100%;"> 
+      <tr>
+        <td style="text-align:center; width:25%;" aria-hidden="true">
+          <img src="
+QR21.png
+" alt="
+QR di rilancio verso sito web
+">
+        </td>
+        <td style="width:75%;">
+          <p class="testo1">
+Ospedali pubblici, case della salute e poliambulatori
+</p><p class="testo1">
+fonte: Open Data - Comune di Bologna
+</p><p class="testo1"><a href="
+https://opendata.comune.bologna.it/explore/dataset/strutture-sanitarie/table/
+" target="_blank">
+Riferimento del dataset
+</a></p></td>
+      </tr>
+    </table>
+
+<table style="width:100%;"> <tr><td style="text-align:center; width:25%;" aria-hidden="true"><img src="
+QR22.png
+" alt="
+QR di rilancio verso sito web
+"></td><td style="width:75%;"><p class="testo1">
+Farmacie
+</p><p class="testo1">
+fonte: Open Data - Comune di Bologna</p><p class="testo1"><a href="
+https://opendata.comune.bologna.it/explore/dataset/farmacie/table/" target="_blank">
+Riferimento del dataset
+</a></p></td></tr></table>
+
+<table style="width:100%;"> <tr><td style="text-align:center; width:25%;" aria-hidden="true"><img src="
+QR23.png
+" alt="
+QR di rilancio verso sito web
+"></td><td style="width:75%;"><p class="testo1">
+Personale medico-medicina generale
+</p><p class="testo1">fonte: Medico di Medicina Generale (MMG) - progetto
+sole
+</p><p class="testo1"><a href="
+https://cercamedico.progetto-sole.it/
+" target="_blank">
+Riferimento del dataset
+</a></p></td></tr></table>
+
+<table style="width:100%;"> <tr><td style="text-align:center; width:25%;" aria-hidden="true"><img src="
+QR24.png
+" alt="
+QR di rilancio verso sito web
+"></td><td style="width:75%;"><p class="testo1">
+Personale medico-medici pediatri
+</p><p class="testo1">
+fonte: : Pediatra di Libera Scelta (PLS) - progetto
+sole</p><p class="testo1"><a href="
+https://cercamedico.progetto-sole.it/" target="_blank">
+Riferimento del dataset
+</a></p></td></tr></table>
+
+<table style="width:100%;"> <tr><td style="text-align:center; width:25%;" aria-hidden="true"><img src="
+QR25.png
+" alt="
+QR di rilancio verso sito web
+"></td><td style="width:75%;"><p class="testo1">
+Consultori pubblici
+</p><p class="testo1">
+fonte: AUSL Bologna</p><p class="testo1"><a href="
+https://www.ausl.bologna.it/guida-ai-servizi?b_start:int=0&input_search_field=consultori&cmdRicreca=Cerca%20/%20https://guidaservizi.fascicolo-sanitario.it/dettaglio/prestazione/3152769" target="_blank">
+Riferimento del dataset
+</a></p></td></tr></table>
+
+
+  </div> 
+  <div class="blocco">
+    <br><img src="ruolo.png" alt="Icone corpo e ruolo"  style="float:right; width: 50px;"><br><br><br>
+    <ol class="livello-3">
+      <li>
+        <h4 class="titolo-paragrafo">
+I servizi e le strutture per la
+salute
+</h4>
+<p class="testo">
+La seguente mappa mostra le strutture della salute ed i
+servizi medico-sanitari primari di cui dispongono gli abitanti
+nel contesto urbano. Tali strutture e servizi rivestono un ruolo
+chiave al fine di garantire un’elevata accessibilità alla cura.</p><br>
+</a></p></td></tr></table>
+</li></div><div class="blocco">
+<figure><iframe src="
+https://nicolonepiva.github.io/mappe_genere/index.html#12/44.4914/11.3478"
+</div></div>
+"></iframe><figcaption>
+Mappa-I servizi e le strutture per la
+salute
+</figcaption></figure></div>
+</div>
+<div class="nuova-pagina pagina-3-grid">  <div class="blocco">   <br><br><table style="width:100%;"> 
+      <tr>
+        <td style="text-align:center; width:25%;" aria-hidden="true">
+          <img src="
+QR26.png
+" alt="
+QR di rilancio verso sito web
+">
+        </td>
+        <td style="width:75%;">
+          <p class="testo1">
+Ospedali bollino rosa
+</p><p class="testo1">
+fonte : bollini rosa
+</p><p class="testo1"><a href="
+https://bollinirosa.it/ricerca-ospedali-bollini-rosa/?kw=&regione%5B%5D=68&provincia%5B%5D=92%0D
+" target="_blank">
+Riferimento del dataset
+</a></p></td>
+      </tr>
+    </table>
+
+<table style="width:100%;"> <tr><td style="text-align:center; width:25%;" aria-hidden="true"><img src="
+QR27.png
+" alt="
+QR di rilancio verso sito web
+"></td><td style="width:75%;"><p class="testo1">
+Ospedali IVG
+</p><p class="testo1">
+fonte : laiga194 - ospedali italiani IVG</p><p class="testo1"><a href="
+https://laiga194.it/mappa-ospedali-italiani-ivg-itg/" target="_blank">
+Riferimento del dataset
+</a></p></td></tr></table>
+
+<table style="width:100%;"> <tr><td style="text-align:center; width:25%;" aria-hidden="true"><img src="
+QR28.png
+" alt="
+QR di rilancio verso sito web
+"></td><td style="width:75%;"><p class="testo1">
+Consultori pubblici
+</p><p class="testo1">fonte : AUSL Bologna
+</p><p class="testo1"><a href="
+https://www.ausl.bologna.it/guida-ai-servizi?b_start:int=0&input_search_field=consultori&cmdRicreca=Cerca%20/%20https://guidaservizi.fascicolo-sanitario.it/dettaglio/prestazione/3152769
+" target="_blank">
+Riferimento del dataset
+</a></p></td></tr></table>
+
+
+
+
+  </div> 
+  <div class="blocco">
+    <br><img src="ruolo.png" alt="Icone corpo e ruolo"  style="float:right; width: 50px;"><br><br><br>
+    <ol class="livello-3">
+      <li>
+        <h4 class="titolo-paragrafo">
+I servizi per le donne
+</h4>
+<p class="testo">
+La seguente mappa mostra i servizi specializzati per le donne, siano
+essi gli ospedali riconosciuti come Bollino Rosa, gli ospedali IVG
+(Interruzione Volontaria Gravidanza) ed i consultori, in cui è possibile
+ottenere la pillola anticoncezionale.</p><br>
+</a></p></td></tr></table>
+</li></div><div class="blocco">
+<figure><iframe src="
+https://nicolonepiva.github.io/mappe_genere/index.html#12/44.4914/11.3478"
+</div></div>
+"></iframe><figcaption>
+Mappa-I servizi per le donne
+</figcaption></figure></div>
+</div>
+<div class="nuova-pagina pagina-3-grid">  <div class="blocco">   <br><br><table style="width:100%;"> 
+      <tr>
+        <td style="text-align:center; width:25%;" aria-hidden="true">
+          <img src="
+QR29.png
+" alt="
+QR di rilancio verso sito web
+">
+        </td>
+        <td style="width:75%;">
+          <p class="testo1">
+URP (Ufficio Relazioni Pubblico)
+</p><p class="testo1">
+fonte: URP di quartiere - Open Data Bologna
+</p><p class="testo1"><a href="
+https://opendata.comune.bologna.it/explore/dataset/urp-di-quartiere/table/?location=13,44.50967,11.33369&basemap=jawg.streets
+" target="_blank">
+Riferimento del dataset
+</a></p></td>
+      </tr>
+    </table>
+
+<table style="width:100%;"> <tr><td style="text-align:center; width:25%;" aria-hidden="true"><img src="
+QR30.png
+" alt="
+QR di rilancio verso sito web
+"></td><td style="width:75%;"><p class="testo1">
+Sportelli sociali
+</p><p class="testo1">
+fonte : laiga194 - ospedali italiani IVG</p><p class="testo1"><a href="
+fonte: Comune di Bologna" target="_blank">
+Riferimento del dataset
+</a></p></td></tr></table>
+
+<table style="width:100%;"> <tr><td style="text-align:center; width:25%;" aria-hidden="true"><img src="
+QR31.png
+" alt="
+QR di rilancio verso sito web
+"></td><td style="width:75%;"><p class="testo1">
+Presidi socio assistenziali
+</p><p class="testo1">fonte: banca dati sui presidi socio assistenziali
+</p><p class="testo1"><a href="
+
+" target="_blank">
+Riferimento del dataset
+</a></p></td></tr></table>
+
+
+
+
+  </div> 
+  <div class="blocco">
+    <br><img src="ruolo.png" alt="Icone corpo e ruolo"  style="float:right; width: 50px;"><br><br><br>
+    <ol class="livello-3">
+      <li>
+        <h4 class="titolo-paragrafo">
+I servizi di assistenza pubblica
+</h4>
+<p class="testo">
+La seguente mappa mostra i diversi servizi di assistenza pubblica nel
+territorio, formati dai presidi socio assistenziali, dagli sportelli porta di
+accesso ai servizi sociali e socio-sanitari del territorio ed i servizi URP
+(Uffici Relazioni con il Pubblico).</p><br>
+</a></p></td></tr></table>
+</li></div><div class="blocco">
+<figure><iframe src="
+https://nicolonepiva.github.io/mappe_genere/index.html#12/44.4914/11.3478"
+</div></div>
+"></iframe><figcaption>
+Mappa-I servizi di assistenza pubblica
+</figcaption></figure></div>
+</div>
+<div class="nuova-pagina pagina-3-grid"><div class="blocco"><img src="img_sinistra.png" alt="mappa semplice in bianco e nero di parte del territorio comunale" width=100%></div><div class="blocco"><br><img src="ruolo.png" alt="Illustrazione corpo e ruolo" style="float:right;"><br><br><ol class="livello-3"><li><h4 class="titolo-paragrafo">
+I servizi per le persone anziane
+</h4>
+<p class="testo">
+La seguente mappa mostra i luoghi della città dove sono collocate le
+strutture per l’alloggio e la cura delle persone anziane.<br><br>
+Le strutture presenti sono state suddivise tra coloro che offrono
+servizio di assistenza per persone anziane autosufficienti e non
+autosufficienti nel Comune di Bologna.</p><br>
+<table style="width:100%;"> <tr><td style="text-align:center; width:25%;" aria-hidden="true"><img src="
+QR32.png
+" alt="
+QR di rilancio verso sito web
+"></td><td style="width:75%;"><p class="testo1">
+Centri assistenza per le persone anziane autosufficienti e non
+autosufficienti
+</p><p class="testo1">
+fonte : banca dati sui presidi socio assistenziali
+</p><p class="testo1"><a href="
+" target="_blank">
+Riferimento del dataset
+</a></p></td></tr></table>
+</li></div><div class="blocco">
+<figure><iframe src="
+https://nicolonepiva.github.io/mappe_genere/index.html#12/44.4914/11.3478"
+</div></div>
+"></iframe><figcaption>
+Mappa-I servizi per le persone anziane
+</figcaption></figure></div>
+</div>
+<div class="nuova-pagina pagina-2-grid"><div class="blocco"><ol class="livello-2"><li><h3 class="titolo-sottosezione">
+Strutture per l'educazione
+</h3><p class="testo">
+Le seguenti mappe mostrano la varietà delle strutture destinate all’educazione
+per bambini, bambine, adolescenti e giovani così come altre sedi esistenti non
+regolamentate considerate rilevanti. Queste strutture di prossimità esercitano la
+loro influenza nel contesto urbano in cui si trovano e diventano quindi risorse per
+la vita sociale e la conciliazione.<br><br>
+Domande delle “Linee guida per progetti inclusivi dal punto di vista di genere”
+alle quali l’Atlante può aiutare a fornire le prime risposte<br><br>Diversità / Diversità e Prossimità<br><br>
+Esiste una rete di luoghi pubblici e del commercio tale da soddisfare le esigenze di persone
+diverse e le varie attività della vita quotidiana, sia riproduttive che produttive nel raggio di
+percorrenza di 15 minuti a piedi? (spazi con funzioni di commercio di vicinato, servizi di vicinato,
+salute, sport, istruzione, cultura, sociale, verde)<br>
+La scuola è inserita in una rete di servizi di vicinato, servizi e spazi pubblici, aree verdi e commercio
+di prossimità, che garantiscono la presenza di persone nelle diverse ore della giornata
+e della sera? (spazi con funzioni di commercio di vicinato, servizi di vicinato, salute, sport,
+istruzione, cultura, sociale, verde)<br>
+La scuola offre spazi (interni ed esterni) per attività aperte al quartiere al termine dell’orario
+scolastico e nei giorni festivi? Sport, corsi extrascolastici, attività delle associazioni, parco giochi
+della scuola, servizi pubblici legati alla salute e all’integrazione, servizi igienici, altre attività. </p>
+</li></div><div class="blocco"><div class="img-pagina">
+<img src="
+bambini_a_scuola.png
+" alt="
+Bambini che camminano di spalle nel corridoio di una scuola
+">
+</div></div></div>
+<div class="nuova-pagina pagina-3-grid"><div class="blocco"><img src="img_sinistra.png" alt="mappa semplice in bianco e nero di parte del territorio comunale" width=100%></div><div class="blocco"><br><img src="ruolo.png" alt="Illustrazione corpo e ruolo" style="float:right;"><br><br><ol class="livello-3"><li><h4 class="titolo-paragrafo">
+I nidi e le scuole d'infanzia
+</h4>
+<p class="testo">
+La seguente mappa mostra gli istituti scolastici per la fascia d’età
+compresa tra 0 e 5 anni facendo riferimento ai nidi e alle scuole d’infanzia.
+Esse sono le strutture educative che richiedono una maggiore
+vicinanza alle aree residenziali dato l’alto grado di dipendenza delle
+bambine e dei bambini.</p><br>
+<table style="width:100%;"> <tr><td style="text-align:center; width:25%;" aria-hidden="true"><img src="
+QR33.png
+" alt="
+QR di rilancio verso sito web
+"></td><td style="width:75%;"><p class="testo1">
+Nidi e scuole d’infanzia pubblici e privati
+</p><p class="testo1">
+fonte : Elenco delle scuole - Open Data Bologna
+</p><p class="testo1"><a href="
+https://opendata.comune.bologna.it/explore/dataset/elenco-delle-scuole/table/?disjunctive.quartiere&disjunctive.servizio
+" target="_blank">
+Riferimento del dataset
+</a></p></td></tr></table>
+</li></div><div class="blocco">
+<figure><iframe src="
+https://nicolonepiva.github.io/mappe_genere/index.html#12/44.4914/11.3478"
+</div></div>
+"></iframe><figcaption>
+Mappa-I nidi e le scuole d'infanzia
+</figcaption></figure></div>
+</div>
+<div class="nuova-pagina pagina-3-grid"><div class="blocco"><img src="img_sinistra.png" alt="mappa semplice in bianco e nero di parte del territorio comunale" width=100%></div><div class="blocco"><br><img src="ruolo.png" alt="Illustrazione corpo e ruolo" style="float:right;"><br><br><ol class="livello-3"><li><h4 class="titolo-paragrafo">
+Le scuole primarie e le
+scuole secondarie di primo grado
+</h4>
+<p class="testo">
+La seguente mappa mostra gli istituti scolastici per la fascia d’età compresa
+tra 6 e 14 anni facendo riferimento alle scuole primarie e scuole
+secondarie di primo grado. A differenza delle mappe precedenti, le
+strutture qui raffigurate si trovano ad una distanza maggiore tra loro.</p><br>
+<table style="width:100%;"> <tr><td style="text-align:center; width:25%;" aria-hidden="true"><img src="
+QR34.png
+" alt="
+QR di rilancio verso sito web
+"></td><td style="width:75%;"><p class="testo1">
+Scuole primarie e scuole secondarie di primo
+grado
+</p><p class="testo1">
+fonte : Elenco delle scuole - Open Data Bologna
+</p><p class="testo1"><a href="
+https://opendata.comune.bologna.it/explore/dataset/elenco-delle-scuole/table/?disjunctive.quartiere&disjunctive.servizio
+" target="_blank">
+Riferimento del dataset
+</a></p></td></tr></table>
+</li></div><div class="blocco">
+<figure><iframe src="
+https://nicolonepiva.github.io/mappe_genere/index.html#12/44.4914/11.3478"
+</div></div>
+"></iframe><figcaption>
+Mappa-Le scuole primarie e le
+scuole secondarie di primo grado
+</figcaption></figure></div>
+</div>
+<div class="nuova-pagina pagina-3-grid"><div class="blocco"><img src="img_sinistra.png" alt="mappa semplice in bianco e nero di parte del territorio comunale" width=100%></div><div class="blocco"><br><img src="ruolo.png" alt="Illustrazione corpo e ruolo" style="float:right;"><br><br><ol class="livello-3"><li><h4 class="titolo-paragrafo">
+Le scuole secondarie di secondo
+grado: Licei – Dati per genere
+</h4>
+<p class="testo">
+La seguente mappa mostra gli istituti scolastici per la fascia d’età compresa
+tra 14 e 18 anni facendo riferimento alle scuole secondarie di secondo
+grado. Vengono rappresentati i luoghi fisici delle scuole e gli iscritti per
+genere raggruppati per zona statistica in cui si trovano le sedi scolastiche.</p><br>
+<table style="width:100%;"> <tr><td style="text-align:center; width:25%;" aria-hidden="true"><img src="
+QR35.png
+" alt="
+QR di rilancio verso sito web
+"></td><td style="width:75%;"><p class="testo1">
+Scuole secondarie di secondo grado: Licei
+</p><p class="testo1">
+fonte : Ministero dell’Istruzione e del Merito
+</p><p class="testo1"><a href="
+https://dati.istruzione.it/opendata/opendata/catalogo/elements1/leaf/?area=Studenti&datasetId=DS0070ALUSECGRADOINDSTA
+" target="_blank">
+Riferimento del dataset
+</a></p></td></tr></table>
+</li></div><div class="blocco">
+<figure><iframe src="
+https://nicolonepiva.github.io/mappe_genere/index.html#12/44.4914/11.3478"
+</div></div>
+"></iframe><figcaption>
+Mappa-Le scuole secondarie di secondo
+grado: Licei – Dati per genere
+</figcaption></figure></div>
+</div>
+<div class="nuova-pagina pagina-3-grid"><div class="blocco"><img src="img_sinistra.png" alt="mappa semplice in bianco e nero di parte del territorio comunale" width=100%></div><div class="blocco"><br><img src="ruolo.png" alt="Illustrazione corpo e ruolo" style="float:right;"><br><br><ol class="livello-3"><li><h4 class="titolo-paragrafo">
+Le scuole secondarie di
+secondo grado: Istituti Tecnici
+– Dati per genere
+</h4>
+<p class="testo">
+La seguente mappa mostra gli istituti scolastici per la fascia d’età
+compresa tra 14 e 18 anni facendo riferimento alle scuole secondarie
+di secondo grado. Vengono rappresentati i luoghi fisici delle scuole e
+gli iscritti per genere raggruppati per zona statistica in cui si trovano le
+sedi scolastiche.</p><br>
+<table style="width:100%;"> <tr><td style="text-align:center; width:25%;" aria-hidden="true"><img src="
+QR36.png
+" alt="
+QR di rilancio verso sito web
+"></td><td style="width:75%;"><p class="testo1">
+Scuole secondarie di secondo grado: Istituti Tecnici
+</p><p class="testo1">
+fonte : Ministero dell’Istruzione e del Merito
+</p><p class="testo1"><a href="
+https://dati.istruzione.it/opendata/opendata/catalogo/elements1/leaf/?area=Studenti&datasetId=DS0070ALUSECGRADOINDSTA
+" target="_blank">
+Riferimento del dataset
+</a></p></td></tr></table>
+</li></div><div class="blocco">
+<figure><iframe src="
+https://nicolonepiva.github.io/mappe_genere/index.html#12/44.4914/11.3478"
+</div></div>
+"></iframe><figcaption>
+Mappa-Le scuole secondarie di
+secondo grado: Istituti Tecnici
+– Dati per genere
+</figcaption></figure></div>
+</div>
+<div class="nuova-pagina pagina-3-grid"><div class="blocco"><img src="img_sinistra.png" alt="mappa semplice in bianco e nero di parte del territorio comunale" width=100%></div><div class="blocco"><br><img src="ruolo.png" alt="Illustrazione corpo e ruolo" style="float:right;"><br><br><ol class="livello-3"><li><h4 class="titolo-paragrafo">
+Le scuole secondarie
+di secondo grado: Istituti
+Professionali – Dati per genere
+</h4>
+<p class="testo">
+La seguente mappa mostra gli istituti scolastici per la fascia
+d’età compresa tra 14 e 18 anni facendo riferimento alle scuole
+secondarie di secondo grado. Vengono rappresentati i luoghi
+fisici delle scuole e gli iscritti per genere raggruppati per zona
+statistica in cui si trovano le sedi scolastiche.</p><br>
+<table style="width:100%;"> <tr><td style="text-align:center; width:25%;" aria-hidden="true"><img src="
+QR37.png
+" alt="
+QR di rilancio verso sito web
+"></td><td style="width:75%;"><p class="testo1">
+Scuole secondarie di secondo grado: Istituti Professionali
+</p><p class="testo1">
+fonte : Ministero dell’Istruzione e del Merito
+</p><p class="testo1"><a href="
+https://dati.istruzione.it/opendata/opendata/catalogo/elements1/leaf/?area=Studenti&datasetId=DS0070ALUSECGRADOINDSTA
+" target="_blank">
+Riferimento del dataset
+</a></p></td></tr></table>
+</li></div><div class="blocco">
+<figure><iframe src="
+https://nicolonepiva.github.io/mappe_genere/index.html#12/44.4914/11.3478"
+</div></div>
+"></iframe><figcaption>
+Mappa-Le scuole secondarie
+di secondo grado: Istituti
+Professionali – Dati per genere
+</figcaption></figure></div>
+</div>
+<div class="nuova-pagina pagina-3-grid">  <div class="blocco">   <br><br><table style="width:100%;"> 
+      <tr>
+        <td style="text-align:center; width:25%;" aria-hidden="true">
+          <img src="
+QR38.png
+" alt="
+QR di rilancio verso sito web
+">
+        </td>
+        <td style="width:75%;">
+          <p class="testo1">
+Scuole aperte d’estate
+</p><p class="testo1">
+fonte : Comune di Bologna
+</p><p class="testo1"><a href="
+https://www.google.com/maps/d/u/0/viewer?mid=17AupOLSwtrJK4F4e2cDXX0x4rjMI-s0&ll=44.50404378119841%2C11.329821349999971&z=13
+" target="_blank">
+Riferimento del dataset
+</a></p></td>
+      </tr>
+    </table>
+
+<table style="width:100%;"> <tr><td style="text-align:center; width:25%;" aria-hidden="true"><img src="
+QR39.png
+" alt="
+QR di rilancio verso sito web
+"></td><td style="width:75%;"><p class="testo1">
+Centri per bambini, bambine e famiglie
+</p><p class="testo1">
+fonte : Informa famiglie e bambini - Regione Emilia
+Romagna</p><p class="testo1"><a href="
+https://www.informafamiglie.it/bologna/scuola-e-servizi-educativi-per-linfanzia/centri-bambini-e-genitori-e-spazi-bambini" target="_blank">
+Riferimento del dataset
+</a></p></td></tr></table>
+
+<table style="width:100%;"> <tr><td style="text-align:center; width:25%;" aria-hidden="true"><img src="
+QR40.png
+" alt="
+QR di rilancio verso sito web
+"></td><td style="width:75%;"><p class="testo1">
+Progetti ECCO
+</p><p class="testo1">fonte : pari opportunità - Città metropolitana di Bologna
+</p><p class="testo1"><a href="https://www.cittametropolitana.bo.it/pariopportunita/Contrasto_violenza_alle_donne/Mappe_servizi_antiviolenza
+
+" target="_blank">
+Riferimento del dataset
+</a></p></td></tr></table>
+
+
+
+
+  </div> 
+  <div class="blocco">
+    <br><img src="ruolo.png" alt="Icone corpo e ruolo"  style="float:right; width: 50px;"><br><br><br>
+    <ol class="livello-3">
+      <li>
+        <h4 class="titolo-paragrafo">
+Le scuole e le attività
+</h4>
+<p class="testo">
+Oltre alle attività scolastiche, in città esistono altri centri che svolgono
+attività educative rivolte a bambini, bambine ed alle loro famiglie.<br>
+Sonono incluse inoltre in questa mappatura le scuole aperte d’estate
+che offrono attività per bambini e bambine al di là del calendario
+scolastico.<br>
+Questa mappa mette in evidenza altri spazi nella città in cui si svolgono
+attività a loro dedicate oltre alle scuole, ai parchi e alle aree verdi. In
+questo modo si sottolinea l’importanza di questi spazi ai fini di una
+buona gestione dell’autonomia da parte dei bambini, delle bambine
+e di chi li accudisce.<br>
+Inoltre nella mappa vengono mostrati anche le scuole aderenti alla rete
+ECCO (Educazione Comunicazione Cultura per le Pari Opportunità di
+Genere), una strategia innovativa, che integra diversi mondi, un’azione
+che interseca le attività promosse dall’Ufficio Pari Opportunità e
+dall’Ufficio Sviluppo Capitale umano della Città metropolitana di
+Bologna, in collaborazione con i servizi territoriali, le scuole e gli enti
+di formazione, ma non solo: unisce anche diversi partner del territorio
+metropolitano, costruendo in questo modo una rete sempre più ricca
+con la convinzione che i contesti educativi siano il luogo privilegiato per
+promuovere le pari opportunità e prevenire forme di discriminazione.</p><br>
+</a></p></td></tr></table>
+</li></div><div class="blocco">
+<figure><iframe src="
+https://nicolonepiva.github.io/mappe_genere/index.html#12/44.4914/11.3478"
+</div></div>
+"></iframe><figcaption>
+Mappa-Le scuole e le attività
+</figcaption></figure></div>
+</div>
+<div class="nuova-pagina pagina-2-grid"><div class="blocco"><ol class="livello-2"><li><h3 class="titolo-sottosezione">
+Strutture per
+l’aggregazione sociale
+</h3><p class="testo">
+Le seguenti mappe mostrano alcune delle diverse strutture che attraverso il tempo
+libero, lo sport e l’apprendimento non formale, facilitano l’interazione tra i diversi
+abitanti e quindi aiutano a costruire reti e legami al fine di una migliore coesione
+sociale.<br>
+Questi spazi contribuiscono in modo molto importante a tessere la diversità dei
+quartieri, a favorire l’autonomia delle persone e a fornire ambienti sicuri intorno a
+noi. La loro presenza agevola e stimola la vita degli abitanti dei quartieri in cui si
+trovano.<br><br>
+Domande delle “Linee guida per progetti inclusivi dal punto di vista di genere”
+alle quali l’Atlante può aiutare a fornire le prime risposte<br><br>
+Diversità / Diversità e Prossimità
+<br><br>
+Esiste una rete di luoghi pubblici e del commercio tale da soddisfare le esigenze di persone
+diverse e le varie attività della vita quotidiana, sia riproduttive che produttive nel raggio di
+percorrenza di 15 minuti a piedi? (spazi con funzioni di commercio di vicinato, servizi di vicinato,
+salute, sport, istruzione, cultura, sociale, verde)<br>
+Ci sono elementi di gioco/attrezzature sportive per le diverse età?<br>
+Ci sono fasciatoi per bambini nei bagni, se sono separati per sesso in entrambi i bagni?
+</p>
+</li></div><div class="blocco"><div class="img-pagina">
+<img src="
+giochi.png
+" alt="
+Foto dall'alto di un parco con una strada dove sono stati disegnati giochi a terra
+">
+</div></div></div>
+<div class="nuova-pagina pagina-3-grid">  <div class="blocco">   <br><br><table style="width:100%;"> 
+      <tr>
+        <td style="text-align:center; width:25%;" aria-hidden="true">
+          <img src="
+QR41.png
+" alt="
+QR di rilancio verso sito web
+">
+        </td>
+        <td style="width:75%;">
+          <p class="testo1">
+Impianti sportivi comunali
+</p><p class="testo1">
+fonte : Impianti sportivi comunali - Open Data Bologna
+</p><p class="testo1"><a href="
+https://opendata.comune.bologna.it/explore/dataset/impianti_sportivi_comunali/information/
+" target="_blank">
+Riferimento del dataset
+</a></p></td>
+      </tr>
+    </table>
+
+<table style="width:100%;"> <tr><td style="text-align:center; width:25%;" aria-hidden="true"><img src="
+QR42.png
+" alt="
+QR di rilancio verso sito web
+"></td><td style="width:75%;"><p class="testo1">
+Attrezzature per lo sport e attrezzature ginniche
+</p><p class="testo1">
+fonte : Attrezzature ludico ginniche sportive -
+Open Data Bologna
+Romagna</p><p class="testo1"><a href="
+https://opendata.comune.bologna.it/explore/dataset/attrezzature_ludiche_ginniche_sportive/table/" target="_blank">
+Riferimento del dataset
+</a></p></td></tr></table>
+
+
+
+
+
+  </div> 
+  <div class="blocco">
+    <br><img src="icone_corpo_ruolo_orizzontali.png" alt="Icona corpo e ruolo"  style="float:right; width: 100px;"><br><br><br>
+    <ol class="livello-3">
+      <li>
+        <h4 class="titolo-paragrafo">
+Gli spazi dello sport
+</h4>
+<p class="testo">
+La pratica dello sport è facilitata dall’accessibilità alle sedi in cui si svolge,
+assumendo il ruolo di spazi che favoriscono l’aggregazione sociale e
+abitudini di vita sane. Di seguito nella mappa sono state rappresentate le
+attrezzature ginniche, gli impianti sportivi comunali, ovvero le strutture
+costruite che permettono lo svolgimento di varie attività sportive
+insieme alle attrezzature per lo sport che si riferiscono a dotazioni che
+aumentano la fornitura dello spazio pubblico e permettono lo sport
+all’aperto (porte da calcetto, reti per pallavolo, tabellone da basket etc.)</p><br>
+</a></p></td></tr></table>
+</li></div><div class="blocco">
+<figure><iframe src="
+https://nicolonepiva.github.io/mappe_genere/index.html#12/44.4914/11.3478"
+</div></div>
+"></iframe><figcaption>
+Mappa-Gli spazi dello sport
+</figcaption></figure></div>
+</div>
+<div class="nuova-pagina pagina-3-grid">  <div class="blocco">   <br><br><table style="width:100%;"> 
+      <tr>
+        <td style="text-align:center; width:25%;" aria-hidden="true">
+          <img src="
+QR43.png
+" alt="
+QR di rilancio verso sito web
+">
+        </td>
+        <td style="width:75%;">
+          <p class="testo1">
+Musei, gallerie d’arte , luoghi e teatri storici
+</p><p class="testo1">
+fonte: Musei, gallerie, luoghi e teatri storici - Open Data
+Bologna
+</p><p class="testo1"><a href="
+https://opendata.comune.bologna.it/explore/dataset/musei_gallerie_luoghi_e_teatri_storici/export/
+" target="_blank">
+Riferimento del dataset
+</a></p></td>
+      </tr>
+    </table>
+
+<table style="width:100%;"> <tr><td style="text-align:center; width:25%;" aria-hidden="true"><img src="
+QR44.png
+" alt="
+QR di rilancio verso sito web
+"></td><td style="width:75%;"><p class="testo1">
+Biblioteche comunali
+</p><p class="testo1">
+fonte : Biblioteche comunali di Bologna - Open Data
+Bologna
+</p><p class="testo1"><a href="
+https://opendata.comune.bologna.it/explore/dataset/biblioteche-comunali-di-bologna/information/?disjunctive.quartiere" target="_blank">
+Riferimento del dataset
+</a></p></td></tr></table>
+
+<table style="width:100%;"> <tr><td style="text-align:center; width:25%;" aria-hidden="true"><img src="
+QR45.png
+" alt="
+QR di rilancio verso sito web
+"></td><td style="width:75%;"><p class="testo1">
+Cinema e teatri
+</p><p class="testo1">fonte : Cultura - SIT Comune di Bologna
+</p><p class="testo1"><a href="https://sitmappe.comune.bologna.it/Cultura/
+" target="_blank">
+Riferimento del dataset
+</a></p></td></tr></table>
+
+
+
+
+  </div> 
+  <div class="blocco">
+    <br><img src="ruolo.png" alt="Icone corpo e ruolo"  style="float:right; width: 50px;"><br><br><br>
+    <ol class="livello-3">
+      <li>
+        <h4 class="titolo-paragrafo">
+Gli spazi della cultura
+</h4>
+<p class="testo">
+La seguente mappa mostra i principali centri in cui si svolgono
+diversi tipi di attività culturali. Oltre al loro carattere formativo,
+questi spazi sono catalizzatori di incontri tra abitanti di
+differenti provenienze e condizioni contribuendo a favorire la
+diversità sociale.</p><br>
+</a></p></td></tr></table>
+</li></div><div class="blocco">
+<figure><iframe src="
+https://nicolonepiva.github.io/mappe_genere/index.html#12/44.4914/11.3478"
+</div></div>
+"></iframe><figcaption>
+Mappa-Gli spazi della cultura
+</figcaption></figure></div>
+</div>
+<div class="nuova-pagina pagina-3-grid">  <div class="blocco">   <br><br><table style="width:100%;"> 
+      <tr>
+        <td style="text-align:center; width:25%;" aria-hidden="true">
+          <img src="
+QR46.png
+" alt="
+QR di rilancio verso sito web
+">
+        </td>
+        <td style="width:75%;">
+          <p class="testo1">
+Biblioteche comunali con fasciatoio e/o area bambini/e Biblioteca delle donne
+</p><p class="testo1">
+fonte : Biblioteche comunali - Open Data Bologna
+</p><p class="testo1"><a href="
+https://opendata.comune.bologna.it/explore/dataset/biblioteche-comunali-di-bologna/information/?disjunctive.quartiere
+" target="_blank">
+Riferimento del dataset
+</a></p></td>
+      </tr>
+    </table>
+
+
+
+
+
+
+  </div> 
+  <div class="blocco">
+    <br><img src="ruolo.png" alt="Icone corpo e ruolo"  style="float:right; width: 50px;"><br><br><br>
+    <ol class="livello-3">
+      <li>
+        <h4 class="titolo-paragrafo">
+Le biblioteche anche per
+bambini e bambine
+</h4>
+<p class="testo">
+La seguente mappa si concentra in particolare sulle biblioteche
+cittadine e sul loro rapporto con le donne, i bambini e le
+bambine. Viene rappresentata la biblioteca italiana delle donne,
+riconosciuta come uno dei centri di documentazione delle donne
+più importanti nel panorama europeo, e le altre biblioteche sono
+indicate per le loro capacità di accogliere i bambini e le bambine
+(con aree specifiche destinate a fasciatoi e/o aree gioco) facilitando
+così l’accesso alla cultura fin dai primi anni d’età.</p><br>
+</a></p></td></tr></table>
+</li></div><div class="blocco">
+<figure><iframe src="
+https://nicolonepiva.github.io/mappe_genere/index.html#12/44.4914/11.3478"
+</div></div>
+"></iframe><figcaption>
+Mappa-Le biblioteche anche per
+bambini e bambine
+</figcaption></figure></div>
+</div>
+<div class="nuova-pagina pagina-3-grid">  <div class="blocco">   <br><br><table style="width:100%;"> 
+      <tr>
+        <td style="text-align:center; width:25%;" aria-hidden="true">
+          <img src="
+QR47.png
+" alt="
+QR di rilancio verso sito web
+">
+        </td>
+        <td style="width:75%;">
+          <p class="testo1">
+Case di quartiere
+</p><p class="testo1">
+fonte: Case di quartiere - Open Data Bologna
+</p><p class="testo1"><a href="
+https://opendata.comune.bologna.it/explore/dataset/case-di-quartiere-di-bologna/information/
+" target="_blank">
+Riferimento del dataset
+</a></p></td>
+      </tr>
+    </table>
+
+<table style="width:100%;"> <tr><td style="text-align:center; width:25%;" aria-hidden="true"><img src="
+QR48.png
+" alt="
+QR di rilancio verso sito web
+"></td><td style="width:75%;"><p class="testo1">
+Circolo ARCI
+</p><p class="testo1">
+fonte : Arci Bologna
+</p><p class="testo1"><a href="
+https://arcibologna.it/trova-un-circolo/" target="_blank">
+Riferimento del dataset
+</a></p></td></tr></table>
+
+<table style="width:100%;"> <tr><td style="text-align:center; width:25%;" aria-hidden="true"><img src="
+QR49.png
+" alt="
+QR di rilancio verso sito web
+"></td><td style="width:75%;"><p class="testo1">
+Aree ortive
+</p><p class="testo1">fonte : Aree ortive - Open Data Bologna
+</p><p class="testo1"><a href="https://opendata.comune.bologna.it/explore/dataset/aree-ortive/information/
+" target="_blank">
+Riferimento del dataset
+</a></p></td></tr></table>
+
+
+
+
+  </div> 
+  <div class="blocco">
+    <br><img src="ruolo.png" alt="Icone corpo e ruolo"  style="float:right; width: 50px;"><br><br><br>
+    <ol class="livello-3">
+      <li>
+        <h4 class="titolo-paragrafo">
+I luoghi di aggregazione
+</h4>
+<p class="testo">
+Nella città ci sono diverse strutture in cui si svolgono attività
+comunitarie. Questa mappa raccoglie e mostra tali luoghi. Dalle
+aree ortive, dove si pratica la coltivazione come attività sociale
+e ricreativa, al circolo ARCI per le persone anziane, alle case di
+quartiere.</p><br>
+</a></p></td></tr></table>
+</li></div><div class="blocco">
+<figure><iframe src="
+https://nicolonepiva.github.io/mappe_genere/index.html#12/44.4914/11.3478"
+</div></div>
+"></iframe><figcaption>
+Mappa-I luoghi di aggregazione
+</figcaption></figure></div>
+</div>
+<div class="nuova-pagina pagina-3-grid">  <div class="blocco">   <br><br><table style="width:100%;"> 
+      <tr>
+        <td style="text-align:center; width:25%;" aria-hidden="true">
+          <img src="
+QR50.png
+" alt="
+QR di rilancio verso sito web
+">
+        </td>
+        <td style="width:75%;">
+          <p class="testo1">
+Eventi culturali per tutti e per bambini e bambine
+</p><p class="testo1">
+fonte : Eventi Bologna Agenda Cultura - Open Data
+Bologna
+</p><p class="testo1"><a href="
+https://opendata.comune.bologna.it/explore/dataset/eventi-bologna-agenda-cultura/information/?disjunctive.online&disjunctive.categories_1&disjunctive.quartiere&disjunctive.area_metropolitana&disjunctive.zona_di_prossimita&disjunctive.area_statistica
+" target="_blank">
+Riferimento del dataset
+</a></p></td>
+      </tr>
+    </table>
+
+
+
+
+
+
+  </div> 
+  <div class="blocco">
+    <br><img src="ruolo.png" alt="Icone corpo e ruolo"  style="float:right; width: 50px;"><br><br><br>
+    <ol class="livello-3">
+      <li>
+        <h4 class="titolo-paragrafo">
+Gli eventi culturali aperti
+</h4>
+<p class="testo">
+La seguente mappa ha lo scopo di esemplificare l’attività culturale
+che si svolge nelle diverse strutture della città. La mappa mostra una
+versione semplificata di un ricco database che raccoglie tutta l’agenda
+culturale con le rispettive attività classificate per categorie. Sulla base
+di queste informazioni, la mappa evidenzia e distingue le attività che
+si rivolgono ad un pubblico più giovane per rendere visibile come
+l’offerta presente cerchi di coinvolgere tutte le fasce d’età.</p><br>
+</a></p></td></tr></table>
+</li></div><div class="blocco">
+<figure><iframe src="
+https://nicolonepiva.github.io/mappe_genere/index.html#12/44.4914/11.3478"
+</div></div>
+"></iframe><figcaption>
+Mappa-Gli eventi culturali aperti
+</figcaption></figure></div>
+</div>
+<div class="nuova-pagina pagina-3-grid">  <div class="blocco">   <br><br><table style="width:100%;"> 
+      <tr>
+        <td style="text-align:center; width:25%;" aria-hidden="true">
+          <img src="
+QR51.png
+" alt="
+QR di rilancio verso sito web
+">
+        </td>
+        <td style="width:75%;">
+          <p class="testo1">
+Mappa interattiva delle associazioni
+</p><p class="testo1">
+fonte : Pari opportunità, tutela delle differenze, diritti
+delle persone LGBTQI e contrasto alla violenza
+di genere - Comune di Bologna
+</p><p class="testo1"><a href="
+https://sitmappe.comune.bologna.it/ServiziDonne/
+" target="_blank">
+Riferimento del dataset
+</a></p></td>
+      </tr>
+    </table>
+
+
+
+
+
+
+  </div> 
+  <div class="blocco">
+    <br><img src="icone_corpo_ruolo_orizzontali.png" alt="Icone corpo e ruolo"  style="float:right; width: 100px;"><br><br><br>
+    <ol class="livello-3">
+      <li>
+        <h4 class="titolo-paragrafo">
+Le associazioni con attività
+dedicate alle donne
+</h4>
+<p class="testo">
+La seguente mappa mostra le sedi e gli sportelli delle associazioni
+e dei gruppi informali dedicati alle donne e impegnati a lavorare
+sui temi della parità di genere nel lavoro, nell’inclusione sociale,
+nel contrasto alla violenza, nell’imprenditoria, nella formazione,
+nell’educazione sessuale, nella medicina di genere e nella cultura.</p><br>
+</a></p></td></tr></table>
+</li></div><div class="blocco">
+<figure><iframe src="
+https://nicolonepiva.github.io/mappe_genere/index.html#12/44.4914/11.3478"
+</div></div>
+"></iframe><figcaption>
+Mappa-Le associazioni con attività
+dedicate alle donne
+</figcaption></figure></div>
+</div>
+<div class="nuova-pagina pagina-2-grid"><div class="blocco"><ol class="livello-2"><li><h3 class="titolo-sottosezione">
+Strutture di
+prevenzione,
+accoglienza, ascolto,
+ospitalità e protezione
+per donne che hanno
+subito violenza
+</h3><p class="testo">
+Secondo i dati dell’ISTAT (Istituto Nazionale di Statistica), in Italia il 31,5% delle 16-
+70enni (6 milioni 788 mila) ha subìto nel corso della propria vita una qualche forma
+di violenza fisica o sessuale: il 20,2% (4 milioni 353 mila) ha subìto violenza fisica, il
+21% (4 milioni 520 mila) violenza sessuale, il 5,4% (1 milione 157 mila) ha subito uno
+stupro (652 mila) e un tentato stupro (746 mila). Questo capitolo mostra alcune
+delle strutture di cui dispone oggi la città per affrontare tale problema.
+</p>
+</li></div><div class="blocco"><div class="img-pagina">
+<img src="
+donne.png
+" alt="
+Foto di quattro donne sorridenti a mezzo busto
+">
+</div></div></div>
+<div class="nuova-pagina pagina-3-grid">  <div class="blocco">   <br><br><table style="width:100%;"> 
+      <tr>
+        <td style="text-align:center; width:25%;" aria-hidden="true">
+          <img src="
+QR52.png
+" alt="
+QR di rilancio verso sito web
+">
+        </td>
+        <td style="width:75%;">
+          <p class="testo1">
+Centri antiviolenza donne
+</p><p class="testo1">
+fonte : banca dati sui presidi socio assistenziali - Regione
+Emilia Romagna
+</p><p class="testo1"><a href="
+" target="_blank">
+Riferimento del dataset
+</a></p></td>
+      </tr>
+    </table>
+
+<table style="width:100%;"> <tr><td style="text-align:center; width:25%;" aria-hidden="true"><img src="
+QR53.png
+" alt="
+QR di rilancio verso sito web
+"></td><td style="width:75%;"><p class="testo1">
+Centri uomini autori di violenza
+</p><p class="testo1">
+fonte : pari opportunità - Città metropolitana di Bologna
+</p><p class="testo1"><a href="
+https://www.cittametropolitana.bo.it/pariopportunita/Contrasto_violenza_alle_donne/Mappe_servizi_antiviolenza
+" target="_blank">
+Riferimento del dataset
+</a></p></td></tr></table>
+
+
+
+
+
+  </div> 
+  <div class="blocco">
+    <br><img src="icone_corpo_ruolo_orizzontali.png" alt="Icona corpo e ruolo"  style="float:right; width: 100px;"><br><br><br>
+    <ol class="livello-3">
+      <li>
+        <h4 class="titolo-paragrafo">
+I centri antiviolenza
+</h4>
+<p class="testo">
+I Centri Antiviolenza (CAV) sono luoghi in cui vengono accolte
+le donne che hanno subito violenza.<br>
+Grazie all’accoglienza telefonica, ai colloqui personali,
+all’ospitalità in case rifugio e ai numerosi altri servizi offerti, le
+donne sono coadiuvate nel loro percorso di uscita dalla violenza.<br>
+Inoltre nella mappa vengono mostrati i centri per uomini autori
+di violenza.</p><br>
+</a></p></td></tr></table>
+</li></div><div class="blocco">
+<figure><iframe src="
+https://nicolonepiva.github.io/mappe_genere/index.html#12/44.4914/11.3478"
+</div></div>
+"></iframe><figcaption>
+Mappa-I centri antiviolenza
+</figcaption></figure></div>
+</div>
+<div class="nuova-pagina pagina-3-grid"><div class="blocco"><img src="img_sinistra.png" alt="mappa semplice in bianco e nero di parte del territorio comunale" width=100%></div><div class="blocco"><br><img src="icone_corpo_ruolo_orizzontali.png" alt="Illustrazione corpo e ruolo" style="float:right; width: 100px;"><br><br><ol class="livello-3"><li><h4 class="titolo-paragrafo">
+Le case dell’accoglienza
+specializzate
+</h4>
+<p class="testo">
+I servizi offerti dalle case dell’accoglienza sono rivolti alle donne che
+hanno subito violenza o sono state minacciate e che hanno bisogno
+di un luogo sicuro.</p><p class="testo">La seguente mappa mostra i servizi dell’accoglienza rivolti alle donne
+e donne-madri che hanno subito violenza o sono state minacciate,
+con l’obiettivo di sostenerle, affiancarle e offrire contesti protetti.</p><br>
+<table style="width:100%;"> <tr><td style="text-align:center; width:25%;" aria-hidden="true"><img src="
+QR54.png
+" alt="
+QR di rilancio verso sito web
+"></td><td style="width:75%;"><p class="testo1">
+Centro accoglienza donne e donne-madri
+</p><p class="testo1">
+fonte : banca dati sui presidi socio assistenziali -Regione Emilia
+Romagna
+</p><p class="testo1"><a href="
+" target="_blank">
+Riferimento del dataset
+</a></p></td></tr></table>
+</li></div><div class="blocco">
+<figure><iframe src="
+https://nicolonepiva.github.io/mappe_genere/index.html#12/44.4914/11.3478"
+</div></div>
+"></iframe><figcaption>
+Mappa-Le case dell’accoglienza
+specializzate
+</figcaption></figure></div>
+</div>
+<div class="nuova-pagina pagina-3-grid">  <div class="blocco">   <br><br><table style="width:100%;"> 
+      <tr>
+        <td style="text-align:center; width:25%;" aria-hidden="true">
+          <img src="
+QR55.png
+" alt="
+QR di rilancio verso sito web
+">
+        </td>
+        <td style="width:75%;">
+          <p class="testo1">
+Sportelli SPAD
+</p><p class="testo1">
+fonte : pari opportunità - Città metropolitana di Bologna
+</p><p class="testo1"><a href="
+https://www.cittametropolitana.bo.it/pariopportunita/Contrasto_violenza_alle_donne/Mappe_servizi_antiviolenza
+" target="_blank">
+Riferimento del dataset
+</a></p></td>
+      </tr>
+    </table>
+
+<table style="width:100%;"> <tr><td style="text-align:center; width:25%;" aria-hidden="true"><img src="
+QR56.png
+" alt="
+QR di rilancio verso sito web
+"></td><td style="width:75%;"><p class="testo1">
+Sedi Polizia di Stato
+</p><p class="testo1">
+fonte: Questure e commissariati - Polizia di Stato
+</p><p class="testo1"><a href="
+https://questure.poliziadistato.it/servizio/commissariati/5730dc9d14574271527580
+" target="_blank">
+Riferimento del dataset
+</a></p></td></tr></table>
+
+
+<table style="width:100%;"> <tr><td style="text-align:center; width:25%;" aria-hidden="true"><img src="
+QR57.png
+" alt="
+QR di rilancio verso sito web
+"></td><td style="width:75%;"><p class="testo1">
+Carabinieri
+</p><p class="testo1">
+fonte: Ministero della Difesa - Carabinieri
+</p><p class="testo1"><a href="https://www.carabinieri.it/in-vostro-aiuto/informazioni/dove-siamo
+" target="_blank">
+Riferimento del dataset
+</a></p></td></tr></table>
+
+
+
+
+  </div> 
+  <div class="blocco">
+    <br><img src="icone_corpo_ruolo_orizzontali.png" alt="Icona corpo e ruolo"  style="float:right; width: 100px;"><br><br><br>
+    <ol class="livello-3">
+      <li>
+        <h4 class="titolo-paragrafo">
+Le strutture di prevenzione
+e protezione
+</h4>
+<p class="testo">
+La seguente mappa mostra le sedi della polizia, dei carabinieri
+e della polizia municipale nei quali le donne possono segnalare
+o denunciare le violenze subite, insieme allo sportello SPAD
+(Sportelli Anti Discriminazione) e agli sportelli antidiscriminazione,
+in grado di accogliere, ascoltare e supportare le persone vittime di
+discriminazione.</p><br>
+</a></p></td></tr></table>
+</li></div><div class="blocco">
+<figure><iframe src="
+https://nicolonepiva.github.io/mappe_genere/index.html#12/44.4914/11.3478"
+</div></div>
+"></iframe><figcaption>
+Mappa-Le strutture di prevenzione
+e protezione
+</figcaption></figure></div>
+</div>
+<div class="nuova-pagina pagina-2-grid"> <div class="blocco"> <ol class="livello-1"> <li> <h2 class="titolo-sezione">
+Gli spazi aperti
+</h2>
+<p class="testo">
+Le seguenti sezioni mostrano diverse mappe costruite a partire dai dati che
+descrivono gli spazi aperti della città. A causa della loro scala, della complessità
+dei diversi e molteplici usi che se ne fanno e delle discipline che se ne occupano
+sono trattati in un capitolo a parte. Tuttavia, la loro funzione ultima è quella di
+offrire servizi agli abitanti per la salute, il tempo libero e l’aggregazione sociale.
+</p></li></div>
+<div class="blocco"><div class="img-pagina"> <img src="
+fontane.png
+" alt="
+Una serie di fontane al centro di un laghetto nei giardini Margherita di Bologna
+">
+</div></div></div>
+<!-- FINE STRUTTURA -->
+</div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</main>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  const contenitoreIndice = document.getElementById("indice-automatico");
+  if (!contenitoreIndice) return;
+
+  // Raccogliamo tutte le sezioni nell'ordine esatto del DOM
+  const sezioni = document.querySelectorAll("ol.livello-1 > li, ol.livello-2 > li, ol.livello-3 > li");
+  
+  let c1 = 0, c2 = 0, c3 = 0;
+  
+  let listaMiniIndiceCorrente = null;
+  let divMiniIndiceCorrente = null;
+
+  // Un unico ciclo ad alte prestazioni
+  sezioni.forEach((li, index) => {
+    const idUnivoco = "sez-auto-" + index;
+    if(!li.id) li.id = idUnivoco; // Garantisce l'ID univoco
+
+    const divTitolo = li.querySelector(".titolo-sezione, .titolo-sottosezione, .titolo-paragrafo");
+    if (!divTitolo) return;
+    const testoTitolo = divTitolo.innerText.trim();
+
+    let classeLivello = "";
+    let numerazione = "";
+
+    // ── GESTIONE STRUTTURA MINI-INDICI ──
+    if (li.parentElement.classList.contains("livello-1")) {
+      c1++; c2 = 0; c3 = 0;
+      classeLivello = "idx-l1";
+      numerazione = c1 + ". ";
+      
+      // Creiamo il contenitore del mini indice
+      divMiniIndiceCorrente = document.createElement("div");
+      divMiniIndiceCorrente.className = "mini-indice-capitolo";
+      divMiniIndiceCorrente.innerHTML = `<div class="mini-idx-titolo">In questo capitolo:</div>`;
+      
+      listaMiniIndiceCorrente = document.createElement("ul");
+      // Placeholder temporaneo: ci dice se il capitolo è nato correttamente anche se vuoto
+      listaMiniIndiceCorrente.innerHTML = `<li class="mini-idx-vuoto" style="font-style: italic; color: var(--color-muted); font-size: 0.65rem;">(Nessun sotto-capitolo)</li>`;
+      
+      divMiniIndiceCorrente.appendChild(listaMiniIndiceCorrente);
+      
+      // SICUREZZA PRO: Lo appendiamo dentro il 'li' del capitolo. 
+      // Resta dentro la colonna ed evita di rompere i layout CSS Grid delle pagine.
+      li.appendChild(divMiniIndiceCorrente);
+
+    } else if (li.parentElement.classList.contains("livello-2")) {
+      c2++; c3 = 0;
+      classeLivello = "idx-l2";
+      numerazione = c1 + "." + c2 + " ";
+
+      if (listaMiniIndiceCorrente) {
+        // Se c'è il testo provvisorio "(Nessun sotto-capitolo)", lo rimuoviamo al primo elemento reale
+        const placeholder = listaMiniIndiceCorrente.querySelector(".mini-idx-vuoto");
+        if (placeholder) placeholder.remove();
+
+        const itemMini = document.createElement("li");
+        itemMini.innerHTML = `<a href="#${li.id}">• ${numerazione}${testoTitolo}</a>`;
+        listaMiniIndiceCorrente.appendChild(itemMini);
+      }
+
+    } else if (li.parentElement.classList.contains("livello-3")) {
+      c3++;
+      classeLivello = "idx-l3";
+      numerazione = c1 + "." + c2 + "." + c3 + " ";
+    }
+
+    // ── GENERAZIONE INDICE GENERALE ──
+    const paginaPadre = li.closest(".nuova-pagina");
+    let numeroPagina = "??";
+    if (paginaPadre) {
+      const tutteLePagine = Array.from(document.querySelectorAll(".nuova-pagina"));
+      numeroPagina = tutteLePagine.indexOf(paginaPadre) + 1;
+    }
+
+    const rigaIndice = document.createElement("div");
+    rigaIndice.className = `idx-item ${classeLivello}`;
+    rigaIndice.innerHTML = `
+      <a href="#${li.id}" data-target="${li.id}">${numerazione}${testoTitolo}</a>
+      <span class="idx-page">${numeroPagina}</span>
+    `;
+    contenitoreIndice.appendChild(rigaIndice);
+  });
+
+  // ── INSERIMENTO TASTO "COSTRUISCI LA TUA MAPPA" NEGLI IFRAME ──
+  document.querySelectorAll('iframe').forEach(iframe => {
+    // Cerchiamo il blocco contenitore più vicino per gestire il posizionamento relativo assoluto
+    const bloccoContenitore = iframe.closest('.blocco');
+    if (bloccoContenitore) {
+      const bottoneMappa = document.createElement('a');
+      bottoneMappa.href = 'https://20.61.198.202/ODS/mappa_base/index.html#13/44.4957/11.3533';
+      bottoneMappa.target = '_blank';
+      bottoneMappa.className = 'btn-mappa-personalizzata';
+      bottoneMappa.textContent = 'Costruisci la tua mappa';
+      
+      bloccoContenitore.appendChild(bottoneMappa);
+    }
+  });
+
+  // ── TOGGLE MODALITÀ WEB / COMUNICATO ──
+  window.setMode = function(mode) {
+    const body = document.body;
+    const btnC = document.getElementById('btn-comunicato');
+    const btnW = document.getElementById('btn-web');
+    if (mode === 'web') {
+      body.classList.add('web-mode');
+      btnW.classList.add('active');
+      btnC.classList.remove('active');
+      btnW.setAttribute('aria-pressed', 'true');
+      btnC.setAttribute('aria-pressed', 'false');
+      localStorage.setItem('viewMode', 'web');
+    } else {
+      body.classList.remove('web-mode');
+      btnC.classList.add('active');
+      btnW.classList.remove('active');
+      btnC.setAttribute('aria-pressed', 'true');
+      btnW.setAttribute('aria-pressed', 'false');
+      localStorage.setItem('viewMode', 'comunicato');
+    }
+  };
+
+  // Ripristina modalità salvata
+  const savedMode = localStorage.getItem('viewMode');
+  if (savedMode === 'web') setMode('web');
+
+
+  document.body.addEventListener("click", function(e) {
+    const link = e.target.closest("a");
+    if (!link || link.classList.contains('btn-mappa-personalizzata')) return; // Esclude il tasto mappa dallo smooth scroll
+
+    let targetId = link.getAttribute("data-target");
+    if (!targetId && link.getAttribute("href")?.startsWith("#")) {
+      targetId = link.getAttribute("href").substring(1);
+    }
+
+    if (targetId) {
+      const elementoTarget = document.getElementById(targetId);
+      if (elementoTarget) {
+        e.preventDefault();
+        const paginaDaRaggiungere = elementoTarget.closest(".nuova-pagina");
+        if (paginaDaRaggiungere) {
+          paginaDaRaggiungere.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+      }
+    }
+  });
+});
+
+</script>
+
+
+</body>
+</html>
