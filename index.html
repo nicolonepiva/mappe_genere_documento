@@ -21,15 +21,16 @@
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-    body {
+    /* 1. Inizializzazione globale sul body: i contatori nascono qui e non muoiono mai */
+body {
   font-family: var(--font-body);
   background: var(--color-bg);
   color: var(--color-text);
   line-height: 1.75;
   padding: 2rem 1.5rem;
-  counter-reset: pagina 0 c1 0 c2 0 c3 0; /* <--- 'pagina' aggiunto insieme a c1, c2 e c3 */
+  /* Partendo da -1 e 0, la seconda pagina avrà 3 a sx e 4 a dx */
+  counter-reset: pagina_sx -1 pagina_dx 0 c1 0 c2 0 c3 0; 
 }
-
     /* ══════════════════════════════════════════
        PAGINA — altezza fissa px, multi-column
        Il contenuto scorre automaticamente nella
@@ -203,7 +204,8 @@ body {
   color: var(--color-text);
   line-height: 1.75;
   padding: 2rem 1.5rem;
-  counter-reset: c1 0 c2 0 c3 0; /* <--- Inizializza tutto a 0 all'inizio del documento */
+  /* MODIFICA FONDAMENTALE: Inizializza qui le pagine a -1 e 0 */
+  counter-reset: pagina_sx -1 pagina_dx 0 c1 0 c2 0 c3 0; 
 }
 
 /* Rimuoviamo i vecchi reset standard che spezzavano il flusso */
@@ -368,30 +370,43 @@ padding-bottom: 0rem;
 
 
 /* ══════════════════════════════════════════ 
-   GESTIONE NUMERAZIONE PAGINE
+   GESTIONE NUMERAZIONE PAGINE (DOPPIA PAGINA)
    ══════════════════════════════════════════ */
 
-/* Ogni pagina incrementa il contatore */
+/* Ogni nuova pagina fisica fa scattare in avanti entrambi i contatori di +2 */
 .nuova-pagina {
   position: relative;
-  counter-increment: pagina;
+  counter-increment: pagina_sx 2 pagina_dx 2;
 }
 
-/* Numero pagina in basso a sinistra */
+/* Numero pagina in basso a SINISTRA (Numeri Dispari: 1, 3, 5...) */
 .nuova-pagina::after {
-  content: "Pagina " counter(pagina);
+  content: "Pagina " counter(pagina_sx);
   position: absolute;
   bottom: 0.6rem;
   left: 1rem;
   font-size: 0.7rem;
   color: #6b7280;
   font-family: var(--font-head);
-  z-index: 10; /* Assicura che il numero sia visibile sopra eventuali griglie */
+  z-index: 10;
 }
 
-/* Nasconde il numero nella prima pagina (Copertina) */
-.nuova-pagina:first-of-type::after {
-  content: none; /* 'none' è più pulito rispetto a stringa vuota per i pseudo-elementi */
+/* Numero pagina in basso a DESTRA (Numeri Pari: 2, 4, 6...) */
+.nuova-pagina::before {
+  content: "Pagina " counter(pagina_dx);
+  position: absolute;
+  bottom: 0.6rem;
+  right: 1rem;
+  font-size: 0.7rem;
+  color: #6b7280;
+  font-family: var(--font-head);
+  z-index: 10;
+}
+
+/* Nasconde i numeri nella prima pagina (Copertina) */
+.nuova-pagina:first-of-type::after,
+.nuova-pagina:first-of-type::before {
+  content: none;
 }
 
 
@@ -654,7 +669,8 @@ body.web-mode .pagina-1-grid {
 }
 
 /* Numeri di pagina: nascondili in modalità web */
-body.web-mode .nuova-pagina::after { display: none; }
+body.web-mode .nuova-pagina::after,
+body.web-mode .nuova-pagina::before { display: none; }
 
 /* Immagini decorative laterali/intestazioni/copertina: nascoste in web */
 body.web-mode .img-sinistra-nascosta,
@@ -864,6 +880,11 @@ iframe {
 }
 </style>
 
+
+
+
+
+
 </head>
 
 
@@ -902,8 +923,8 @@ iframe {
     <p class="testo">Progetto "GENDER GAP REDUCTION IN URBAN PROJECTS IN BOLOGNA (ITALY)"</p>
     <p class="testo">Per i dettagli della realizzazione della prima edizione del documento e per 
 gli aspetti legali e gli approfondimenti vai al link</p>
-    <p class="testo">  <a href="https://www.comune.bologna.it/governo/programmazione-strategica/agenda-2030">
-https://www.comune.bologna.it/governo/programmazione-strategica/agenda-2030</a>
+    <p class="testo">  <a href="https://www.comune.bologna.it/governo/programmazione-strategica/agenda-2030" target="_blank">
+agenda 2030</a>
     </p>
   
     <p class="testo">Autori edizione 2024</p>
@@ -999,7 +1020,7 @@ sarà funzionale non solo a fare emergere la rappresentazione di luoghi
 e spazi, ma anche a permettere alle comunità locali e, in particular,
 alle sue componenti più vulnerabili di poter ambire a contesti educativamente
 attrezzati, socialmente ricchi e urbanisticamente vivibili.</p>
-  
+  <br>
 <img src="firma_assessore.png" alt="Firma assessore">
 <p class="testo">La Vicesindaca Emily Marion Clancy</p>
   
@@ -1341,10 +1362,11 @@ https://inumeridibolognametropolitana.it/dati-statistici/densita-di-popolazione-
 Riferimento del dataset
 </a></p></td></tr></table>
 </li></div><div class="blocco">
-<figure><iframe src="
-https://nicolonepiva.github.io/mappe_genere/index.html#12/44.4914/11.3478%22"
-</div></div>
-"></iframe><figcaption>
+<figure style="margin: 0;"><img src="
+https://nicolonepiva.github.io/mappe_genere_documento/111.png"
+style="width: 100%; height: auto; display: block;" alt="
+La densità della popolazione residente
+"><figcaption>
 Mappa-La densità della popolazione residente
 </figcaption></figure></div>
 </div>
@@ -1372,10 +1394,11 @@ https://opendata.comune.bologna.it/explore/dataset/popolazione-residente-per-eta
 Riferimento del dataset
 </a></p></td></tr></table>
 </li></div><div class="blocco">
-<figure><iframe src="
-https://nicolonepiva.github.io/mappe_genere/index.html#12/44.4914/11.3478"
-</div></div>
-"></iframe><figcaption>
+<figure style="margin: 0;"><img src="
+https://nicolonepiva.github.io/mappe_genere_documento/112.png"
+style="width: 100%; height: auto; display: block;" alt="
+La densità della popolazione femminile giovanile
+"><figcaption>
 Mappa-La densità della popolazione femminile giovanile
 </figcaption></figure></div>
 </div>
@@ -1403,10 +1426,11 @@ https://opendata.comune.bologna.it/explore/dataset/popolazione-residente-per-eta
 Riferimento del dataset
 </a></p></td></tr></table>
 </li></div><div class="blocco">
-<figure><iframe src="
-https://nicolonepiva.github.io/mappe_genere/index.html#12/44.4914/11.3478"
-</div></div>
-"></iframe><figcaption>
+<figure style="margin: 0;"><img src="
+https://nicolonepiva.github.io/mappe_genere_documento/113.png"
+style="width: 100%; height: auto; display: block;" alt="
+La densità della popolazione femminile di età avanzata
+"><figcaption>
 Mappa-La densità della popolazione femminile di età avanzata
 </figcaption></figure></div>
 </div>
@@ -1434,10 +1458,11 @@ https://opendata.comune.bologna.it/explore/dataset/popolazione-residente-per-eta
 Riferimento del dataset
 </a></p></td></tr></table>
 </li></div><div class="blocco">
-<figure><iframe src="
-https://nicolonepiva.github.io/mappe_genere/index.html#12/44.4914/11.3478"
-</div></div>
-"></iframe><figcaption>
+<figure style="margin: 0;"><img src="
+https://nicolonepiva.github.io/mappe_genere_documento/114.png"
+style="width: 100%; height: auto; display: block;" alt="
+La densità della popolazione femminile anziana
+"><figcaption>
 Mappa-La densità della popolazione femminile anziana
 </figcaption></figure></div>
 </div>
@@ -1466,10 +1491,11 @@ https://opendata.comune.bologna.it/explore/dataset/popolazione-residente-per-eta
 Riferimento del dataset
 </a></p></td></tr></table>
 </li></div><div class="blocco">
-<figure><iframe src="
-https://nicolonepiva.github.io/mappe_genere/index.html#12/44.4914/11.3478"
-</div></div>
-"></iframe><figcaption>
+<figure style="margin: 0;"><img src="
+https://nicolonepiva.github.io/mappe_genere_documento/115.png"
+style="width: 100%; height: auto; display: block;" alt="
+Il bilancio della popolazione tra maschi e femmine
+"><figcaption>
 Mappa-Il bilancio della popolazione tra maschi e femmine
 </figcaption></figure></div>
 </div>
@@ -1516,10 +1542,11 @@ https://geoportale.regione.emilia-romagna.it/catalogo/dati-cartografici/pianific
 Riferimento del dataset
 </a></p></td></tr></table>
 </li></div><div class="blocco">
-<figure><iframe src="
-https://nicolonepiva.github.io/mappe_genere/index.html#12/44.4914/11.3478"
-</div></div>
-"></iframe><figcaption>
+<figure style="margin: 0;"><img src="
+https://nicolonepiva.github.io/mappe_genere_documento/121.png"
+style="width: 100%; height: auto; display: block;" alt="
+Gli ambiti con uso residenziale
+"><figcaption>
 Mappa-Gli ambiti con uso residenziale
 </figcaption></figure></div>
 </div>
@@ -1548,10 +1575,12 @@ https://inumeridibolognametropolitana.it/studi-e-ricerche/la-fragilita-demografi
 Riferimento del dataset
 </a></p></td></tr></table>
 </li></div><div class="blocco">
-<figure><iframe src="
-https://nicolonepiva.github.io/mappe_genere/index.html#12/44.4914/11.3478"
-</div></div>
-"></iframe><figcaption>
+<figure style="margin: 0;"><img src="
+https://nicolonepiva.github.io/mappe_genere_documento/122.png"
+style="width: 100%; height: auto; display: block;" alt="
+Le aree con bassa qualità
+edilizia
+"><figcaption>
 Mappa-Le aree con bassa qualità
 edilizia
 </figcaption></figure></div>
@@ -1581,10 +1610,12 @@ https://inumeridibolognametropolitana.it/studi-e-ricerche/la-fragilita-demografi
 Riferimento del dataset
 </a></p></td></tr></table>
 </li></div><div class="blocco">
-<figure><iframe src="
-https://nicolonepiva.github.io/mappe_genere/index.html#12/44.4914/11.3478"
-</div></div>
-"></iframe><figcaption>
+<figure style="margin: 0;"><img src="
+https://nicolonepiva.github.io/mappe_genere_documento/123.png"
+style="width: 100%; height: auto; display: block;" alt="
+La percentuale di nuclei con
+spazio abitativo insufficiente
+"><figcaption>
 Mappa-La percentuale di nuclei con
 spazio abitativo insufficiente
 </figcaption></figure></div>
@@ -1668,10 +1699,13 @@ caratterizzata da un divario di genere sfavorevole per le donne
 (indicato con il punto in primo piano).</p><br>
 </a></p></td></tr></table>
 </li></div><div class="blocco">
-<figure><iframe src="
-https://nicolonepiva.github.io/mappe_genere/index.html#12/44.4914/11.3478"
-</div></div>
-"></iframe><figcaption>
+<figure style="margin: 0;"><img src="
+https://nicolonepiva.github.io/mappe_genere_documento/131.png"
+style="width: 100%; height: auto; display: block;" alt="
+Indice di potenziale fragilità
+socio-demografica individuale e
+divario di genere
+"><figcaption>
 Mappa-Indice di potenziale fragilità
 socio-demografica individuale e
 divario di genere
@@ -1725,10 +1759,13 @@ da un divario di genere sfavorevole per le donne (indicato
 con il punto in primo piano).</p><br>
 </a></p></td></tr></table>
 </li></div><div class="blocco">
-<figure><iframe src="
-https://nicolonepiva.github.io/mappe_genere/index.html#12/44.4914/11.3478"
-</div></div>
-"></iframe><figcaption>
+<figure style="margin: 0;"><img src="
+https://nicolonepiva.github.io/mappe_genere_documento/132.png"
+style="width: 100%; height: auto; display: block;" alt="
+Indice di potenziale fragilità
+economica individuale e divario
+di genere
+"><figcaption>
 Mappa-Indice di potenziale fragilità
 economica individuale e divario
 di genere
@@ -1778,10 +1815,13 @@ da un divario di genere sfavorevole per le donne (indicato con il
 punto in primo piano).</p><br>
 </a></p></td></tr></table>
 </li></div><div class="blocco">
-<figure><iframe src="
-https://nicolonepiva.github.io/mappe_genere/index.html#12/44.4914/11.3478"
-</div></div>
-"></iframe><figcaption>
+<figure style="margin: 0;"><img src="
+https://nicolonepiva.github.io/mappe_genere_documento/133.png"
+style="width: 100%; height: auto; display: block;" alt="
+Indice di potenziale fragilità
+globale individuale e divario di
+genere
+"><figcaption>
 Mappa-Indice di potenziale fragilità
 globale individuale e divario di
 genere
@@ -1835,10 +1875,11 @@ https://inumeridibolognametropolitana.it/studi-e-ricerche/i-bisogni-socio-assist
 Riferimento del dataset
 </a></p></td></tr></table>
 </li></div><div class="blocco">
-<figure><iframe src="
-https://nicolonepiva.github.io/mappe_genere/index.html#12/44.4914/11.3478"
-</div></div>
-"></iframe><figcaption>
+<figure style="margin: 0;"><img src="
+https://nicolonepiva.github.io/mappe_genere_documento/141.png"
+style="width: 100%; height: auto; display: block;" alt="
+L’accesso ai servizi di welfare
+"><figcaption>
 Mappa-L’accesso ai servizi di welfare
 </figcaption></figure></div>
 </div>
@@ -1867,10 +1908,12 @@ https://inumeridibolognametropolitana.it/studi-e-ricerche/i-bisogni-socio-assist
 Riferimento del dataset
 </a></p></td></tr></table>
 </li></div><div class="blocco">
-<figure><iframe src="
-https://nicolonepiva.github.io/mappe_genere/index.html#12/44.4914/11.3478"
-</div></div>
-"></iframe><figcaption>
+<figure style="margin: 0;"><img src="
+https://nicolonepiva.github.io/mappe_genere_documento/142.png"
+style="width: 100%; height: auto; display: block;" alt="
+I bisogni autorizzati di
+contributi economici
+"><figcaption>
 Mappa-I bisogni autorizzati di
 contributi economici
 </figcaption></figure></div>
@@ -1903,10 +1946,12 @@ https://inumeridibolognametropolitana.it/studi-e-ricerche/i-bisogni-socio-assist
 Riferimento del dataset
 </a></p></td></tr></table>
 </li></div><div class="blocco">
-<figure><iframe src="
-https://nicolonepiva.github.io/mappe_genere/index.html#12/44.4914/11.3478"
-</div></div>
-"></iframe><figcaption>
+<figure style="margin: 0;"><img src="
+https://nicolonepiva.github.io/mappe_genere_documento/143.png"
+style="width: 100%; height: auto; display: block;" alt="
+I bisogni autorizzati di
+segretariato sociale
+"><figcaption>
 Mappa-I bisogni autorizzati di
 segretariato sociale
 </figcaption></figure></div>
@@ -1937,10 +1982,12 @@ https://inumeridibolognametropolitana.it/studi-e-ricerche/i-bisogni-socio-assist
 Riferimento del dataset
 </a></p></td></tr></table>
 </li></div><div class="blocco">
-<figure><iframe src="
-https://nicolonepiva.github.io/mappe_genere/index.html#12/44.4914/11.3478"
-</div></div>
-"></iframe><figcaption>
+<figure style="margin: 0;"><img src="
+https://nicolonepiva.github.io/mappe_genere_documento/144.png"
+style="width: 100%; height: auto; display: block;" alt="
+I bisogni autorizzati di
+servizi sociali
+"><figcaption>
 Mappa-I bisogni autorizzati di
 servizi sociali
 </figcaption></figure></div>
@@ -1992,7 +2039,7 @@ Riferimento del dataset
 </a></p></td></tr></table>
 </li></div><div class="blocco">
 <figure><iframe src="
-https://nicolonepiva.github.io/mappe_genere/index.html#12/44.4914/11.3478"
+"
 </div></div>
 "></iframe><figcaption>
 Mappa-Indice del carico di cura
@@ -2029,7 +2076,7 @@ Riferimento del dataset
 </a></p></td></tr></table>
 </li></div><div class="blocco">
 <figure><iframe src="
-https://nicolonepiva.github.io/mappe_genere/index.html#12/44.4914/11.3478"
+"
 </div></div>
 "></iframe><figcaption>
 Mappa-Indice di dipendenza economica
@@ -2085,7 +2132,7 @@ percentuale di donne con elevata percezione di emozioni negative.</p><br>
 </a></p></td></tr></table>
 </li></div><div class="blocco">
 <figure><iframe src="
-https://nicolonepiva.github.io/mappe_genere/index.html#12/44.4914/11.3478"
+"
 </div></div>
 "></iframe><figcaption>
 Mappa-Indice della percezione
@@ -2123,7 +2170,7 @@ Riferimento del dataset
 </a></p></td></tr></table>
 </li></div><div class="blocco">
 <figure><iframe src="
-https://nicolonepiva.github.io/mappe_genere/index.html#12/44.4914/11.3478"
+"
 </div></div>
 "></iframe><figcaption>
 Mappa-Indice di qualità della vita
@@ -2159,7 +2206,7 @@ Riferimento del dataset
 </a></p></td></tr></table>
 </li></div><div class="blocco">
 <figure><iframe src="
-https://nicolonepiva.github.io/mappe_genere/index.html#12/44.4914/11.3478"
+"
 </div></div>
 "></iframe><figcaption>
 Mappa-Indice di qualità della vita
@@ -2295,7 +2342,7 @@ chiave al fine di garantire un’elevata accessibilità alla cura.</p><br>
 </a></p></td></tr></table>
 </li></div><div class="blocco">
 <figure><iframe src="
-https://nicolonepiva.github.io/mappe_genere/index.html#12/44.4914/11.3478"
+"
 </div></div>
 "></iframe><figcaption>
 Mappa-I servizi e le strutture per la
@@ -2368,7 +2415,7 @@ ottenere la pillola anticoncezionale.</p><br>
 </a></p></td></tr></table>
 </li></div><div class="blocco">
 <figure><iframe src="
-https://nicolonepiva.github.io/mappe_genere/index.html#12/44.4914/11.3478"
+"
 </div></div>
 "></iframe><figcaption>
 Mappa-I servizi per le donne
@@ -2440,7 +2487,7 @@ accesso ai servizi sociali e socio-sanitari del territorio ed i servizi URP
 </a></p></td></tr></table>
 </li></div><div class="blocco">
 <figure><iframe src="
-https://nicolonepiva.github.io/mappe_genere/index.html#12/44.4914/11.3478"
+"
 </div></div>
 "></iframe><figcaption>
 Mappa-I servizi di assistenza pubblica
@@ -2470,7 +2517,7 @@ Riferimento del dataset
 </a></p></td></tr></table>
 </li></div><div class="blocco">
 <figure><iframe src="
-https://nicolonepiva.github.io/mappe_genere/index.html#12/44.4914/11.3478"
+"
 </div></div>
 "></iframe><figcaption>
 Mappa-I servizi per le persone anziane
@@ -2528,7 +2575,7 @@ Riferimento del dataset
 </a></p></td></tr></table>
 </li></div><div class="blocco">
 <figure><iframe src="
-https://nicolonepiva.github.io/mappe_genere/index.html#12/44.4914/11.3478"
+"
 </div></div>
 "></iframe><figcaption>
 Mappa-I nidi e le scuole d'infanzia
@@ -2559,7 +2606,7 @@ Riferimento del dataset
 </a></p></td></tr></table>
 </li></div><div class="blocco">
 <figure><iframe src="
-https://nicolonepiva.github.io/mappe_genere/index.html#12/44.4914/11.3478"
+"
 </div></div>
 "></iframe><figcaption>
 Mappa-Le scuole primarie e le
@@ -2590,7 +2637,7 @@ Riferimento del dataset
 </a></p></td></tr></table>
 </li></div><div class="blocco">
 <figure><iframe src="
-https://nicolonepiva.github.io/mappe_genere/index.html#12/44.4914/11.3478"
+"
 </div></div>
 "></iframe><figcaption>
 Mappa-Le scuole secondarie di secondo
@@ -2623,7 +2670,7 @@ Riferimento del dataset
 </a></p></td></tr></table>
 </li></div><div class="blocco">
 <figure><iframe src="
-https://nicolonepiva.github.io/mappe_genere/index.html#12/44.4914/11.3478"
+"
 </div></div>
 "></iframe><figcaption>
 Mappa-Le scuole secondarie di
@@ -2657,7 +2704,7 @@ Riferimento del dataset
 </a></p></td></tr></table>
 </li></div><div class="blocco">
 <figure><iframe src="
-https://nicolonepiva.github.io/mappe_genere/index.html#12/44.4914/11.3478"
+"
 </div></div>
 "></iframe><figcaption>
 Mappa-Le scuole secondarie
@@ -2748,7 +2795,7 @@ promuovere le pari opportunità e prevenire forme di discriminazione.</p><br>
 </a></p></td></tr></table>
 </li></div><div class="blocco">
 <figure><iframe src="
-https://nicolonepiva.github.io/mappe_genere/index.html#12/44.4914/11.3478"
+"
 </div></div>
 "></iframe><figcaption>
 Mappa-Le scuole e le attività
@@ -2844,7 +2891,7 @@ all’aperto (porte da calcetto, reti per pallavolo, tabellone da basket etc.)</
 </a></p></td></tr></table>
 </li></div><div class="blocco">
 <figure><iframe src="
-https://nicolonepiva.github.io/mappe_genere/index.html#12/44.4914/11.3478"
+"
 </div></div>
 "></iframe><figcaption>
 Mappa-Gli spazi dello sport
@@ -2919,7 +2966,7 @@ diversità sociale.</p><br>
 </a></p></td></tr></table>
 </li></div><div class="blocco">
 <figure><iframe src="
-https://nicolonepiva.github.io/mappe_genere/index.html#12/44.4914/11.3478"
+"
 </div></div>
 "></iframe><figcaption>
 Mappa-Gli spazi della cultura
@@ -2973,7 +3020,7 @@ così l’accesso alla cultura fin dai primi anni d’età.</p><br>
 </a></p></td></tr></table>
 </li></div><div class="blocco">
 <figure><iframe src="
-https://nicolonepiva.github.io/mappe_genere/index.html#12/44.4914/11.3478"
+"
 </div></div>
 "></iframe><figcaption>
 Mappa-Le biblioteche anche per
@@ -3047,7 +3094,7 @@ quartiere.</p><br>
 </a></p></td></tr></table>
 </li></div><div class="blocco">
 <figure><iframe src="
-https://nicolonepiva.github.io/mappe_genere/index.html#12/44.4914/11.3478"
+"
 </div></div>
 "></iframe><figcaption>
 Mappa-I luoghi di aggregazione
@@ -3100,7 +3147,7 @@ l’offerta presente cerchi di coinvolgere tutte le fasce d’età.</p><br>
 </a></p></td></tr></table>
 </li></div><div class="blocco">
 <figure><iframe src="
-https://nicolonepiva.github.io/mappe_genere/index.html#12/44.4914/11.3478"
+"
 </div></div>
 "></iframe><figcaption>
 Mappa-Gli eventi culturali aperti
@@ -3153,7 +3200,7 @@ nell’educazione sessuale, nella medicina di genere e nella cultura.</p><br>
 </a></p></td></tr></table>
 </li></div><div class="blocco">
 <figure><iframe src="
-https://nicolonepiva.github.io/mappe_genere/index.html#12/44.4914/11.3478"
+"
 </div></div>
 "></iframe><figcaption>
 Mappa-Le associazioni con attività
@@ -3241,7 +3288,7 @@ di violenza.</p><br>
 </a></p></td></tr></table>
 </li></div><div class="blocco">
 <figure><iframe src="
-https://nicolonepiva.github.io/mappe_genere/index.html#12/44.4914/11.3478"
+"
 </div></div>
 "></iframe><figcaption>
 Mappa-I centri antiviolenza
@@ -3272,7 +3319,7 @@ Riferimento del dataset
 </a></p></td></tr></table>
 </li></div><div class="blocco">
 <figure><iframe src="
-https://nicolonepiva.github.io/mappe_genere/index.html#12/44.4914/11.3478"
+"
 </div></div>
 "></iframe><figcaption>
 Mappa-Le case dell’accoglienza
@@ -3351,7 +3398,7 @@ discriminazione.</p><br>
 </a></p></td></tr></table>
 </li></div><div class="blocco">
 <figure><iframe src="
-https://nicolonepiva.github.io/mappe_genere/index.html#12/44.4914/11.3478"
+"
 </div></div>
 "></iframe><figcaption>
 Mappa-Le strutture di prevenzione
@@ -3489,7 +3536,7 @@ garantendo alla propria utenza maggiore autonomia e sicurezza.</p><br>
 </a></p></td></tr></table>
 </li></div><div class="blocco">
 <figure><iframe src="
-https://nicolonepiva.github.io/mappe_genere/index.html#12/44.4914/11.3478"
+"
 </div></div>
 "></iframe><figcaption>
 Mappa-Gli spazi della convivialità
@@ -3538,7 +3585,7 @@ Riferimento del dataset
 </a></p></td></tr></table>
 </li></div><div class="blocco">
 <figure><iframe src="
-https://nicolonepiva.github.io/mappe_genere/index.html#12/44.4914/11.3478"
+"
 </div></div>
 "></iframe><figcaption>
 Mappa-Gli spazi del gioco
@@ -3590,7 +3637,7 @@ maschi e che alcune di loro potrebbero avere il ciclo mestruale.</p><br>
 </a></p></td></tr></table>
 </li></div><div class="blocco">
 <figure><iframe src="
-https://nicolonepiva.github.io/mappe_genere/index.html#12/44.4914/11.3478"
+"
 </div></div>
 "></iframe><figcaption>
 Mappa-I servizi igienici
@@ -3646,7 +3693,7 @@ di strutture menzionate a una distanza di 400 metri.</p><br>
 </a></p></td></tr></table>
 </li></div><div class="blocco">
 <figure><iframe src="
-https://nicolonepiva.github.io/mappe_genere/index.html#12/44.4914/11.3478"
+"
 </div></div>
 "></iframe><figcaption>
 Mappa-Indice di arredo urbano
@@ -3739,7 +3786,7 @@ strutture menzionate a una distanza di 400 metri.</p><br>
 </a></p></td></tr></table>
 </li></div><div class="blocco">
 <figure><iframe src="
-https://nicolonepiva.github.io/mappe_genere/index.html#12/44.4914/11.3478"
+"
 </div></div>
 "></iframe><figcaption>
 Mappa-Indice di vitalità a piano terra
@@ -3797,7 +3844,7 @@ Riferimento del dataset
 </a></p></td></tr></table>
 </li></div><div class="blocco">
 <figure><iframe src="
-https://nicolonepiva.github.io/mappe_genere/index.html#12/44.4914/11.3478"
+"
 </div></div>
 "></iframe><figcaption>
 Mappa-La percezione dello spazio
@@ -3830,7 +3877,7 @@ Riferimento del dataset
 </a></p></td></tr></table>
 </li></div><div class="blocco">
 <figure><iframe src="
-https://nicolonepiva.github.io/mappe_genere/index.html#12/44.4914/11.3478"
+"
 </div></div>
 "></iframe><figcaption>
 Mappa-La percezione dell’insicurezza
@@ -3908,7 +3955,7 @@ sono più con noi.</p><br>
 </a></p></td></tr></table>
 </li></div><div class="blocco">
 <figure><iframe src="
-https://nicolonepiva.github.io/mappe_genere/index.html#12/44.4914/11.3478"
+"
 </div></div>
 "></iframe><figcaption>
 Mappa-La rappresentazione di
@@ -4072,7 +4119,7 @@ parte di coloro che hanno problemi di mobilità.</p><br>
 </a></p></td></tr></table>
 </li></div><div class="blocco">
 <figure><iframe src="
-https://nicolonepiva.github.io/mappe_genere/index.html#12/44.4914/11.3478"
+"
 </div></div>
 "></iframe><figcaption>
 Mappa-Gli spazi a servizio delle automobili
@@ -4123,7 +4170,7 @@ Riferimento del dataset
 </a></p></td></tr></table>
 </li></div><div class="blocco">
 <figure><iframe src="
-https://nicolonepiva.github.io/mappe_genere/index.html#12/44.4914/11.3478"
+"
 </div></div>
 "></iframe><figcaption>
 Mappa-Le fermate del trasporto pubblico
@@ -4172,7 +4219,7 @@ Riferimento del dataset
 </a></p></td></tr></table>
 </li></div><div class="blocco">
 <figure><iframe src="
-https://nicolonepiva.github.io/mappe_genere/index.html#12/44.4914/11.3478"
+"
 </div></div>
 "></iframe><figcaption>
 Mappa-Gli spazi per le biciclette
@@ -4251,7 +4298,7 @@ con sicurezza, autonomia e la stessa capillarità.</p><br>
 </a></p></td></tr></table>
 </li></div><div class="blocco">
 <figure><iframe src="
-https://nicolonepiva.github.io/mappe_genere/index.html#12/44.4914/11.3478"
+"
 </div></div>
 "></iframe><figcaption>
 Mappa-La mobilità pedonale
@@ -4303,7 +4350,7 @@ personale e per quello dei loro genitori.</p><br>
 </a></p></td></tr></table>
 </li></div><div class="blocco">
 <figure><iframe src="
-https://nicolonepiva.github.io/mappe_genere/index.html#12/44.4914/11.3478"
+"
 </div></div>
 "></iframe><figcaption>
 Mappa-Le iniziative scolastiche di
@@ -4383,7 +4430,7 @@ sociale.</p><br>
 </a></p></td></tr></table>
 </li></div><div class="blocco">
 <figure><iframe src="
-https://nicolonepiva.github.io/mappe_genere/index.html#12/44.4914/11.3478"
+"
 </div></div>
 "></iframe><figcaption>
 Mappa-La mobilità stradale
@@ -4436,7 +4483,7 @@ Riferimento del dataset
 </a></p></td></tr></table>
 </li></div><div class="blocco">
 <figure><iframe src="
-https://nicolonepiva.github.io/mappe_genere/index.html#12/44.4914/11.3478"
+"
 </div></div>
 "></iframe><figcaption>
 Mappa-La frequenza degli
@@ -4470,7 +4517,7 @@ Riferimento del dataset
 </a></p></td></tr></table>
 </li></div><div class="blocco">
 <figure><iframe src="
-https://nicolonepiva.github.io/mappe_genere/index.html#12/44.4914/11.3478"
+"
 </div></div>
 "></iframe><figcaption>
 Mappa-La frequenza degli
@@ -4504,7 +4551,7 @@ Riferimento del dataset
 </a></p></td></tr></table>
 </li></div><div class="blocco">
 <figure><iframe src="
-https://nicolonepiva.github.io/mappe_genere/index.html#12/44.4914/11.3478"
+"
 </div></div>
 "></iframe><figcaption>
 Mappa-La frequenza degli
@@ -4540,7 +4587,7 @@ Riferimento del dataset
 </a></p></td></tr></table>
 </li></div><div class="blocco">
 <figure><iframe src="
-https://nicolonepiva.github.io/mappe_genere/index.html#12/44.4914/11.3478"
+"
 </div></div>
 "></iframe><figcaption>
 Mappa-La mobilità casa-lavoro/studio
@@ -4572,7 +4619,7 @@ Riferimento del dataset
 </a></p></td></tr></table>
 </li></div><div class="blocco">
 <figure><iframe src="
-https://nicolonepiva.github.io/mappe_genere/index.html#12/44.4914/11.3478"
+"
 </div></div>
 "></iframe><figcaption>
 Mappa-Il tempo impiegato per
@@ -4601,7 +4648,7 @@ Riferimento del dataset
 </a></p></td></tr></table>
 </li></div><div class="blocco">
 <figure><iframe src="
-https://nicolonepiva.github.io/mappe_genere/index.html#12/44.4914/11.3478"
+"
 </div></div>
 "></iframe><figcaption>
 Mappa-L’uso del trasporto pubblico
@@ -4630,7 +4677,7 @@ Riferimento del dataset
 </a></p></td></tr></table>
 </li></div><div class="blocco">
 <figure><iframe src="
-https://nicolonepiva.github.io/mappe_genere/index.html#12/44.4914/11.3478"
+"
 </div></div>
 "></iframe><figcaption>
 Mappa-Lo Smart Working
@@ -4661,7 +4708,7 @@ Riferimento del dataset
 </a></p></td></tr></table>
 </li></div><div class="blocco">
 <figure><iframe src="
-https://nicolonepiva.github.io/mappe_genere/index.html#12/44.4914/11.3478"
+"
 </div></div>
 "></iframe><figcaption>
 Mappa-Le tappe intermedie della
@@ -4765,7 +4812,7 @@ appartenenti al 2023 e gli interventi precedenti al 2023.</p><br>
 </a></p></td></tr></table>
 </li></div><div class="blocco">
 <figure><iframe src="
-https://nicolonepiva.github.io/mappe_genere/index.html#12/44.4914/11.3478"
+"
 </div></div>
 "></iframe><figcaption>
 Mappa-Gli interventi sulla mobilità
@@ -4805,7 +4852,7 @@ Riferimento del dataset
 </a></p></td></tr></table>
 </li></div><div class="blocco">
 <figure><iframe src="
-https://nicolonepiva.github.io/mappe_genere/index.html#12/44.4914/11.3478"
+"
 </div></div>
 "></iframe><figcaption>
 Mappa-Gli interventi dell’abitare
@@ -4845,7 +4892,7 @@ Riferimento del dataset
 </a></p></td></tr></table>
 </li></div><div class="blocco">
 <figure><iframe src="
-https://nicolonepiva.github.io/mappe_genere/index.html#12/44.4914/11.3478"
+"
 </div></div>
 "></iframe><figcaption>
 Mappa-Gli interventi nei servizi
@@ -4886,7 +4933,7 @@ Riferimento del dataset
 </a></p></td></tr></table>
 </li></div><div class="blocco">
 <figure><iframe src="
-https://nicolonepiva.github.io/mappe_genere/index.html#12/44.4914/11.3478"
+"
 </div></div>
 "></iframe><figcaption>
 Mappa-Gli interventi nei servizi sociali
@@ -4950,7 +4997,7 @@ gli interventi appartenenti al 2023 e gli interventi precedenti al 2023.</p><br>
 </a></p></td></tr></table>
 </li></div><div class="blocco">
 <figure><iframe src="
-https://nicolonepiva.github.io/mappe_genere/index.html#12/44.4914/11.3478"
+"
 </div></div>
 "></iframe><figcaption>
 Mappa-Gli interventi nei servizi
@@ -5032,7 +5079,7 @@ Riferimento del dataset
 </a></p></td></tr></table>
 </li></div><div class="blocco">
 <figure><iframe src="
-https://nicolonepiva.github.io/mappe_genere/index.html#12/44.4914/11.3478"
+"
 </div></div>
 "></iframe><figcaption>
 Mappa-La fragilità microclimatica
@@ -5085,7 +5132,7 @@ Riferimento del dataset
 </a></p></td></tr></table>
 </li></div><div class="blocco">
 <figure><iframe src="
-https://nicolonepiva.github.io/mappe_genere/index.html#12/44.4914/11.3478"
+"
 </div></div>
 "></iframe><figcaption>
 Mappa-La fragilità microclimatica e
@@ -5120,7 +5167,7 @@ Riferimento del dataset
 </a></p></td></tr></table>
 </li></div><div class="blocco">
 <figure><iframe src="
-https://nicolonepiva.github.io/mappe_genere/index.html#12/44.4914/11.3478"
+"
 </div></div>
 "></iframe><figcaption>
 Mappa-La pericolosità idraulica
@@ -5173,7 +5220,7 @@ Riferimento del dataset
 </a></p></td></tr></table>
 </li></div><div class="blocco">
 <figure><iframe src="
-https://nicolonepiva.github.io/mappe_genere/index.html#12/44.4914/11.3478"
+"
 </div></div>
 "></iframe><figcaption>
 Mappa-La pericolosità idraulica e
@@ -5291,12 +5338,15 @@ document.addEventListener("DOMContentLoaded", function() {
       numerazione = c1 + "." + c2 + "." + c3 + " ";
     }
 
-    // ── GENERAZIONE INDICE GENERALE ──
+// ── GENERAZIONE INDICE GENERALE ──
     const paginaPadre = li.closest(".nuova-pagina");
     let numeroPagina = "??";
     if (paginaPadre) {
       const tutteLePagine = Array.from(document.querySelectorAll(".nuova-pagina"));
-      numeroPagina = tutteLePagine.indexOf(paginaPadre) + 1;
+      const indiceFisico = tutteLePagine.indexOf(paginaPadre);
+      
+      // Calcola il numero corretto puntando sempre alla facciata di sinistra (Dispari)
+      numeroPagina = (indiceFisico * 2) + 1; 
     }
 
     const rigaIndice = document.createElement("div");
